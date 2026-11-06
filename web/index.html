@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f8f8">
+  <meta name="description" content="A synthetic asthma check-in dashboard prototype for care teams.">
+  <title>Airwise · Asthma care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=2026-11-06-demo4">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Airwise home"><span class="brand-mark">a</span><span>airwise</span></a>
+      <div class="workspace-label">CARE TEAM</div>
+      <nav aria-label="Main navigation">
+        <a class="nav-item active" href="#dashboard"><span class="nav-icon">▦</span> Overview</a>
+        <a class="nav-item" href="#patient-summary"><span class="nav-icon">♧</span> Patients <span class="nav-count">4</span></a>
+        <a class="nav-item" href="#tracker"><span class="nav-icon">▤</span> Check-ins</a>
+      </nav>
+      <div class="workspace-label patient-list-label">DEMO PATIENTS</div>
+      <div class="patient-list" id="patient-list" aria-label="Choose a synthetic demo patient"></div>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-note"><span class="online-dot"></span><span>Demo workspace<br><small>Synthetic patient data</small></span></div>
+      <div class="profile"><div class="avatar small-avatar">DR</div><div><strong>Care team</strong><small>Provider view</small></div><span class="more">···</span></div>
+    </aside>
+
+    <main class="main" id="dashboard">
+      <header class="topbar">
+        <div class="breadcrumbs">Workspace <span>/</span> Patients <span>/</span> <strong id="breadcrumb-patient">Jordan M.</strong></div>
+        <div class="top-actions"><span class="demo-badge"><i></i> DEMO DATA</span><button class="icon-button" aria-label="Notifications">♧<b></b></button><div class="avatar">DR</div></div>
+      </header>
+
+      <div class="content">
+        <section class="page-heading">
+          <div><p class="eyebrow">PATIENT OVERVIEW</p><h1>Asthma care</h1><p class="subheading">A quick view of symptoms, inhaler use, and daily wellbeing.</p></div>
+          <button class="secondary-button" id="export-button" type="button"><span>↥</span> Export summary</button>
+        </section>
+
+        <section class="calendar-card card" aria-label="Daily calendar">
+          <div class="calendar-toolbar">
+            <button class="calendar-arrow" id="previous-day" type="button" aria-label="Previous day">‹</button>
+            <button class="calendar-date-button" id="calendar-toggle" type="button"><span>▦</span><strong id="selected-day-label">Today</strong><span class="calendar-chevron" id="calendar-chevron">⌄</span></button>
+            <button class="calendar-arrow" id="next-day" type="button" aria-label="Next day">›</button>
+            <span class="calendar-hint">Select a day to review its check-in</span>
+          </div>
+          <div class="month-view" id="month-view" hidden>
+            <div class="month-heading"><button class="month-arrow" id="previous-month" type="button" aria-label="Previous month">‹</button><strong id="month-label"></strong><button class="month-arrow" id="next-month" type="button" aria-label="Next month">›</button></div>
+            <div class="month-grid" id="month-grid"></div>
+          </div>
+          <div class="calendar-day-detail">
+            <div class="daily-rings" id="daily-rings"></div>
+            <div class="calendar-detail-text"><div class="eyebrow">SELECTED DAY</div><strong id="calendar-detail-title">Choose a metric</strong><p id="calendar-detail-description">Tap a ring to see the day’s details.</p></div>
+          </div>
+        </section>
+
+        <section class="patient-banner card" id="patient-summary">
+        <div class="patient-ident">
+            <div class="avatar patient-avatar" id="patient-initials">JM</div>
+            <div><h2 id="patient-name">Jordan M.</h2><p>Patient ID <strong id="patient-id">PT-2048</strong><span class="bullet">·</span> Asthma care</p></div>
+          </div>
+          <div class="banner-divider"></div>
+          <div class="patient-detail"><span class="detail-icon">⌁</span><div><small>CARE STATUS</small><strong><i class="status-dot"></i> Active monitoring</strong></div></div>
+          <div class="patient-detail"><span class="detail-icon">◷</span><div><small>LAST CHECK-IN</small><strong id="last-checkin">Today</strong></div></div>
+          <button class="text-button" id="patient-preview-button" type="button">Patient preview <span>↗</span></button>
+        </section>
+
+        <section class="metric-grid" aria-label="Patient metrics">
+          <article class="metric-card card"><div class="metric-top"><span class="metric-icon green">◉</span><span class="metric-period">LAST 7 ENTRIES</span></div><p class="metric-label">Feeling today</p><div class="metric-value"><span id="feeling-value">4/5</span><span class="metric-mood" id="feeling-mood">Good</span></div><p class="metric-foot">1 bad <span class="scale-line"></span> 5 great</p></article>
+          <article class="metric-card card"><div class="metric-top"><span class="metric-icon coral">✳</span><span class="trend-pill neutral" id="inhaler-trend">—</span></div><p class="metric-label">Rescue inhaler</p><div class="metric-value"><span id="inhaler-value">3 days</span></div><p class="metric-foot">Needed in the last 7 tracked days</p></article>
+          <article class="metric-card card"><div class="metric-top"><span class="metric-icon blue">≋</span><span class="metric-period">LATEST READING</span></div><p class="metric-label">Peak flow</p><div class="metric-value"><span id="peak-flow-value">390</span><span class="metric-unit">L/min</span></div><p class="metric-foot">Latest spirometer reading</p></article>
+          <article class="metric-card card"><div class="metric-top"><span class="metric-icon violet">▦</span><span class="trend-pill neutral" id="tracking-rate">—</span></div><p class="metric-label">Days tracked</p><div class="metric-value"><span id="tracked-value">10</span></div><p class="metric-foot">Last entry <span id="last-entry-date">Today</span></p></article>
+          <article class="metric-card card"><div class="metric-top"><span class="metric-icon blue">✚</span><span class="metric-period">7 DAYS</span></div><p class="metric-label">Controller medication</p><div class="metric-value"><span id="medication-value">6/7</span></div><p class="metric-foot">Days reported taken</p></article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="card trend-card">
+            <div class="section-heading"><div><h3>Feeling over time</h3><p>Patient rating across recent check-ins</p></div><button class="period-button" type="button">Last 7 entries <span>⌄</span></button></div>
+            <div class="chart-wrap"><div class="chart-y-labels"><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div><div class="chart" id="feeling-chart" role="img" aria-label="Feeling ratings over recent check-ins"></div></div>
+            <div class="chart-legend"><span><i class="legend-dot"></i> Feeling rating</span><span class="legend-scale"><span>1 · Bad</span><i></i><span>5 · Great</span></span></div>
+          </article>
+          <article class="card latest-card" id="latest-card">
+            <div class="section-heading"><div><p class="eyebrow">LATEST UPDATE</p><h3>Patient check-in</h3></div><span class="live-tag"><i></i> <span id="latest-time">Today</span></span></div>
+            <div class="latest-feeling"><div class="face-bubble" id="latest-face" aria-hidden="true"></div><div><strong id="latest-feeling">4/5 · Good</strong><small id="latest-inhaler">Rescue inhaler needed</small></div></div>
+            <div class="update-list">
+              <div class="update-row"><span class="update-icon">✳</span><div><small>WHY INHALER WAS NEEDED</small><strong id="latest-reasons">Exercise</strong></div></div>
+              <div class="update-row"><span class="update-icon">✚</span><div><small>CONTROLLER MEDICATION</small><strong id="latest-medication">Taken</strong></div></div>
+              <div class="update-row"><span class="update-icon">◷</span><div><small>WHEN SYMPTOMS APPEAR</small><strong id="latest-timing">During activity</strong></div></div>
+              <div class="update-row"><span class="update-icon">≋</span><div><small>SYMPTOMS</small><strong id="latest-symptoms">Coughing, tight chest</strong></div></div>
+            </div>
+            <button class="view-all-button" type="button" id="jump-to-history">View tracker history <span>→</span></button>
+          </article>
+        </section>
+
+        <section class="dashboard-grid lower-grid">
+          <article class="card patterns-card"><div class="section-heading"><div><h3>Symptom patterns</h3><p>Reported in the last 7 days</p></div><span class="mini-range">7 DAYS</span></div><div class="pattern-block"><div class="pattern-title">When symptoms appear</div><div class="chips" id="timing-chips"></div></div><div class="pattern-block"><div class="pattern-title">Inhaler reasons</div><div class="chips" id="reason-chips"></div></div><div class="pattern-block"><div class="pattern-title">Most reported symptoms</div><div class="chips" id="symptom-chips"></div></div><div class="pattern-block"><div class="pattern-title">Controller medication taken</div><div class="chips" id="medication-chips"></div></div></article>
+          <article class="card tracker-card" id="tracker"><div class="section-heading"><div><h3>Patient tracker</h3><p>Entries submitted from the patient view</p></div><button class="link-button" id="all-entries" type="button">All entries <span>→</span></button></div><div class="table-wrap"><table><thead><tr><th>DATE</th><th>FEELING</th><th>MEDS</th><th>INHALER</th><th>SYMPTOMS</th></tr></thead><tbody id="tracker-rows"></tbody></table></div></article>
+        </section>
+        <section class="card provider-signals"><div class="section-heading"><div><h3>Provider review prompts</h3><p>Descriptive trends from recent check-ins</p></div><span class="signal-badge">DEMO SIGNALS</span></div><div id="provider-insights" aria-live="polite"><p class="signal-loading">Calculating from synthetic check-ins…</p></div><p class="signal-disclaimer">These are retrospective prompts from synthetic demo data, not forecasts or treatment advice.</p></section>
+        <footer class="disclaimer"><span>ⓘ</span> Synthetic demo data · Not for clinical use <span class="footer-dot">·</span> Check-ins use the shared demo database</footer>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="patient-modal" hidden>
+    <section class="patient-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header"><div><p class="eyebrow">PATIENT VIEW PREVIEW</p><h2 id="modal-title">Your daily check-in</h2><p>A quick update for your care team.</p></div><button id="close-modal" class="close-button" aria-label="Close">×</button></div>
+      <form id="checkin-form">
+        <fieldset><legend>How are you feeling today?</legend><p class="field-hint">Choose a number · 1 is bad, 5 is great</p><div class="feeling-options" id="feeling-options"></div></fieldset>
+        <fieldset><legend>Did you need your rescue inhaler today?</legend><div class="segmented"><label><input type="radio" name="inhaler" value="no"><span>No</span></label><label><input type="radio" name="inhaler" value="yes" checked><span>Yes</span></label></div></fieldset>
+        <fieldset><legend>Did you take your controller medication today?</legend><div class="segmented"><label><input type="radio" name="medication" value="no"><span>No</span></label><label><input type="radio" name="medication" value="yes" checked><span>Yes</span></label></div></fieldset>
+        <fieldset id="reason-field"><legend>Why did you need it?</legend><p class="field-hint">Choose all that apply</p><div class="choice-grid" id="reason-options"></div></fieldset>
+        <fieldset><legend>When do symptoms tend to appear?</legend><div class="choice-grid" id="timing-options"></div></fieldset>
+        <fieldset><legend>Any symptoms today?</legend><p class="field-hint">Choose all that apply · optional</p><div class="choice-grid" id="symptom-options"></div></fieldset>
+        <button class="submit-button" type="submit">Save today’s check-in <span>→</span></button>
+      </form>
+      <p class="modal-note">Answers appear in the provider dashboard for everyone using this demo.</p>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=2026-11-06-demo4"></script>
+</body>
+</html>

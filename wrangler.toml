@@ -1,0 +1,10 @@
+name = "airwise-asthma-demo"
+pages_build_output_dir = "./web"
+compatibility_date = "2026-11-06"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "airwise-asthma-demo"
+# Replace this after running `npx wrangler d1 create airwise-asthma-demo`.
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "migrations"
