@@ -1,6 +1,6 @@
-# Airwise asthma demo
+# SMART@Home asthma demo
 
-Airwise is a small asthma check-in prototype with two separate SwiftUI iOS apps and a browser dashboard. The browser demo includes four entirely synthetic patients with daily mood, controller-medication, rescue-inhaler, symptom, trigger, and peak-flow entries. Patient Preview writes to the same database shown by the provider dashboard.
+SMART@Home is a small asthma check-in prototype with two separate SwiftUI iOS apps and a browser dashboard. The browser demo includes four entirely synthetic patients with daily mood, controller-medication, rescue-inhaler, symptom, trigger, and peak-flow entries. Patient Preview writes to the same database shown by the provider dashboard.
 
 ## iOS apps
 
@@ -11,7 +11,7 @@ Open `AsthmaDash/AsthmaDash.xcodeproj` in Xcode and choose an iPhone simulator. 
 
 The patient and provider tabs inside `PatientApp` share live in-memory check-ins. The standalone `ProviderApp` reads and writes the same local API/database used by the browser demo. Run `npm start` from the repository root before launching the iOS apps to enable this cross-app sync. Without the local server, patient check-ins stay on the device and the UI reports that state. Medication and nebulizer readiness checkboxes are sample tracking only and do not give dosing instructions.
 
-To add the patient check-in widget in the iPhone simulator, long-press the Home Screen, tap **Edit** → **Add Widget**, then choose **Airwise Check-in**. Tapping an answer opens the patient app with that answer prefilled; tap **Save my check-in** to submit it.
+To add the patient check-in widget in the iPhone simulator, long-press the Home Screen, tap **Edit** → **Add Widget**, then choose **SMART@Home Check-in**. Tapping an answer opens the patient app with that answer prefilled; tap **Save my check-in** to submit it.
 
 ## Run the browser demo locally
 
@@ -21,7 +21,7 @@ Node.js 26.12 or newer is needed for the built-in SQLite API. No package install
 npm start
 ```
 
-Open `http://localhost:3000`. The demo database defaults to `./data/airwise.db`; set `DATA_DIR` to change its location. It is seeded with four synthetic profiles.
+Open `http://localhost:3000`. The demo database defaults to `./data/SMART@Home.db`; set `DATA_DIR` to change its location. It is seeded with four synthetic profiles.
 
 ## Free public demo deployment
 
@@ -38,14 +38,14 @@ To create the free Cloudflare resources and publish a URL:
 2. Create a D1 database and copy its database ID into `wrangler.toml`, replacing `REPLACE_WITH_D1_DATABASE_ID`:
 
    ```sh
-   npx wrangler d1 create airwise-asthma-demo
+   npx wrangler d1 create SMART@Home-asthma-demo
    ```
 
 3. Apply the schema and synthetic seed data, then deploy the site and API:
 
    ```sh
-   npx wrangler d1 migrations apply airwise-asthma-demo --remote
-   npx wrangler pages deploy ./web --project-name=airwise-asthma-demo
+   npx wrangler d1 migrations apply SMART@Home-asthma-demo --remote
+   npx wrangler pages deploy ./web --project-name=SMART@Home-asthma-demo
    ```
 
 The first Pages deployment creates the project and prints its public `pages.dev` URL. Later releases can use `npm run deploy`. The dashboard and API share one origin, and check-ins submitted from Patient Preview are saved in D1 and visible to every judge using that deployment.
