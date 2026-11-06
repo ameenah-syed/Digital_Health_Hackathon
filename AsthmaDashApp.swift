@@ -48,7 +48,7 @@ struct Feeling {
 }
 
 /// A tiny, original vector face used anywhere the app asks about feelings.
-struct AirwiseBuddyFace: View {
+struct SmartHomeBuddyFace: View {
     let score: Int
     var size: CGFloat = 36
     var colorOverride: Color? = nil
@@ -109,7 +109,7 @@ private struct APICheckIn: Decodable {
 }
 
 private extension ISO8601DateFormatter {
-    static var airwise: ISO8601DateFormatter {
+    static var smartHome: ISO8601DateFormatter {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
@@ -129,13 +129,13 @@ private struct CheckInUpload: Encodable {
 @MainActor
 final class DashboardStore: ObservableObject {
     @Published var checkIns: [CheckIn] = DashboardStore.makeDemoData()
-    @Published var completedLessons: Set<String> = Set(UserDefaults.standard.stringArray(forKey: "airwise-kids-lessons") ?? [])
-    @Published var earnedBadges: Set<String> = Set(UserDefaults.standard.stringArray(forKey: "airwise-kids-badges") ?? [])
+    @Published var completedLessons: Set<String> = Set(UserDefaults.standard.stringArray(forKey: "smarthome-kids-lessons") ?? [])
+    @Published var earnedBadges: Set<String> = Set(UserDefaults.standard.stringArray(forKey: "smarthome-kids-badges") ?? [])
     @Published var medicationChecks: [String: Bool] = [
-        "controller": UserDefaults.standard.object(forKey: "airwise-controller-taken") as? Bool ?? true,
-        "rescueAvailable": UserDefaults.standard.object(forKey: "airwise-rescue-available") as? Bool ?? true
+        "controller": UserDefaults.standard.object(forKey: "smarthome-controller-taken") as? Bool ?? true,
+        "rescueAvailable": UserDefaults.standard.object(forKey: "smarthome-rescue-available") as? Bool ?? true
     ]
-    @Published var pairedDeviceReady = UserDefaults.standard.object(forKey: "airwise-nebulizer-ready") as? Bool ?? true
+    @Published var pairedDeviceReady = UserDefaults.standard.object(forKey: "smarthome-nebulizer-ready") as? Bool ?? true
     @Published var backendSyncStatus = "Connecting to the demo dashboard…"
     let patientName = "Jordan M."
     let patientID = "PT-2048"
@@ -164,19 +164,19 @@ final class DashboardStore: ObservableObject {
 
     func markLessonComplete(_ id: String) {
         completedLessons.insert(id)
-        UserDefaults.standard.set(Array(completedLessons), forKey: "airwise-kids-lessons")
+        UserDefaults.standard.set(Array(completedLessons), forKey: "smarthome-kids-lessons")
         refreshAchievements()
     }
 
     func setMedicationCheck(_ key: String, checked: Bool) {
         medicationChecks[key] = checked
-        let userDefaultsKey = key == "controller" ? "airwise-controller-taken" : "airwise-rescue-available"
+        let userDefaultsKey = key == "controller" ? "smarthome-controller-taken" : "smarthome-rescue-available"
         UserDefaults.standard.set(checked, forKey: userDefaultsKey)
     }
 
     func setPairedDeviceReady(_ ready: Bool) {
         pairedDeviceReady = ready
-        UserDefaults.standard.set(ready, forKey: "airwise-nebulizer-ready")
+        UserDefaults.standard.set(ready, forKey: "smarthome-nebulizer-ready")
     }
 
     func addAndSync(feeling: Int, inhalerNeeded: Bool, symptoms: [String], timing: String?, reasons: [String], date: Date) async {
@@ -218,7 +218,7 @@ final class DashboardStore: ObservableObject {
                 throw URLError(.badServerResponse)
             }
             let remoteEntries = try JSONDecoder().decode([APICheckIn].self, from: data).compactMap { remote -> CheckIn? in
-                guard let date = ISO8601DateFormatter.airwise.date(from: remote.createdAt)
+                guard let date = ISO8601DateFormatter.smartHome.date(from: remote.createdAt)
                         ?? ISO8601DateFormatter().date(from: remote.createdAt) else { return nil }
                 return CheckIn(date: date, inhalerNeeded: remote.inhalerNeeded,
                                medicationTaken: remote.medicationTaken, feeling: remote.feeling,
@@ -239,7 +239,7 @@ final class DashboardStore: ObservableObject {
         if currentStreak >= 7 { earnedBadges.insert("streak-7") }
         if checkIns.contains(where: { !$0.symptoms.isEmpty }) { earnedBadges.insert("symptom-spotter") }
         if completedLessons.count >= 3 { earnedBadges.insert("curious-learner") }
-        UserDefaults.standard.set(Array(earnedBadges), forKey: "airwise-kids-badges")
+        UserDefaults.standard.set(Array(earnedBadges), forKey: "smarthome-kids-badges")
     }
 
     private static func makeDemoData() -> [CheckIn] {
@@ -350,7 +350,7 @@ struct ProviderDashboardView: View {
                             .font(.caption.weight(.semibold)).foregroundStyle(Color.cchTeal)
                     }
                     HStack(spacing: 10) {
-                        AirwiseBuddyFace(score: entry.feeling, size: 42)
+                        SmartHomeBuddyFace(score: entry.feeling, size: 42)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Feeling \(entry.feeling)/5 · \(entry.feelingLabel)").font(.subheadline.bold())
                             Text(entry.inhalerNeeded ? "Rescue inhaler needed" : "Rescue inhaler not needed")
@@ -511,7 +511,7 @@ struct ProviderDashboardView: View {
                 HStack(spacing: 12) {
                     Text(entry.date.formatted(.dateTime.month(.abbreviated).day()))
                         .font(.caption).foregroundStyle(.secondary).frame(width: 52, alignment: .leading)
-                    AirwiseBuddyFace(score: entry.feeling, size: 27)
+                    SmartHomeBuddyFace(score: entry.feeling, size: 27)
                     Text(entry.feelingLabel).font(.subheadline.weight(.medium)).frame(width: 82, alignment: .leading)
                     Text(entry.inhalerNeeded ? "Inhaler needed" : "No inhaler")
                         .font(.caption).foregroundStyle(entry.inhalerNeeded ? .orange : .secondary)
@@ -879,7 +879,7 @@ struct KidsCheckInView: View {
     }
 
     private func applyWidgetAnswers(_ url: URL) {
-        guard url.scheme == "airwise", url.host == "check-in",
+        guard url.scheme == "smarthome", url.host == "check-in",
               let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
         widgetOpenCount += 1
         for item in components.queryItems ?? [] {
@@ -902,7 +902,7 @@ struct KidsCheckInView: View {
         HStack(spacing: 14) {
             ZStack {
                 Circle().fill(Color.cchBlue.opacity(0.13)).frame(width: 68, height: 68)
-                AirwiseBuddyFace(score: 5, size: 48, colorOverride: Color(hex: 0x8E5AD6))
+                SmartHomeBuddyFace(score: 5, size: 48, colorOverride: Color(hex: 0x8E5AD6))
                 Image(systemName: "sparkle").font(.system(size: 16, weight: .bold)).foregroundStyle(Color.cchPink).offset(x: 26, y: -24)
             }
             VStack(alignment: .leading, spacing: 5) {
@@ -967,7 +967,7 @@ struct KidsCheckInView: View {
                 ForEach(Feeling.all, id: \.score) { item in
                     Button { feeling = item.score } label: {
                         VStack(spacing: 7) {
-                            AirwiseBuddyFace(score: item.score, size: 34)
+                            SmartHomeBuddyFace(score: item.score, size: 34)
                             Text(item.title).font(.system(size: 9, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.75)
                         }
                         .foregroundStyle(item.color)
@@ -1050,7 +1050,7 @@ struct KidsCheckInView: View {
         let maxSymptoms = max(3, recent.map { $0.symptoms.count }.max() ?? 0)
         return VStack(alignment: .leading, spacing: 11) {
             HStack(spacing: 10) {
-                AirwiseBuddyFace(score: 5, size: 40)
+                SmartHomeBuddyFace(score: 5, size: 40)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("My breathing clues").font(.headline)
                     Text("A little look at your recent check-ins").font(.caption).foregroundStyle(.secondary)
