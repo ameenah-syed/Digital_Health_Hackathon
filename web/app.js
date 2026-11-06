@@ -440,6 +440,7 @@ function render() {
   showHistory();
   renderProviderHome();
   renderPatientHome();
+  renderPatientAsthmaPage();
   renderPatientApp();
 }
 
@@ -664,11 +665,102 @@ function renderPatientHomeWeek(history = patientEntries()) {
     : "No check-ins yet this week. Pick a day to start your streak!";
 }
 
+function renderPatientAsthmaPage() {
+  const history = patientEntries().slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  const today = localStartOfDay(new Date());
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay());
+  const weekHost = $("#asthma-week-days");
+  weekHost.replaceChildren();
+  let completedDays = 0;
+  for (let index = 0; index < 7; index += 1) {
+    const dayDate = new Date(weekStart); dayDate.setDate(weekStart.getDate() + index);
+    const completed = history.some((entry) => localDateKey(new Date(entry.createdAt)) === localDateKey(dayDate));
+    if (completed) completedDays += 1;
+    const day = document.createElement("div");
+    day.className = `asthma-week-day${completed ? " is-complete" : ""}${localDateKey(dayDate) === localDateKey(today) ? " is-today" : ""}`;
+    const label = document.createElement("small"); label.textContent = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(dayDate);
+    const mark = document.createElement("span"); mark.textContent = completed ? "✓" : "·";
+    day.append(label, mark); weekHost.append(day);
+  }
+  $("#asthma-week-streak").textContent = String(patientStreak());
+  $("#asthma-week-progress").textContent = `${completedDays} of 7 days checked in this week`;
+  const latest = history[history.length - 1];
+  $("#asthma-week-latest").textContent = latest
+    ? `Latest check-in · ${prettyDate(latest.createdAt)} at ${prettyTime(latest.createdAt)} · Feeling ${feelingInfo[latest.feeling].label.toLowerCase()}`
+    : "No check-ins yet. Your first check-in will appear here.";
+
+  const recent = history.slice(-14);
+  drawHomeTrend("#asthma-symptoms-trend", recent, (entry) => entry.symptoms?.length || 0, "#319bc7", 0, 3);
+  drawAsthmaInhalerDots(recent);
+
+  const recentWeek = history.slice(-7);
+  const symptomMentions = recentWeek.reduce((total, entry) => total + (entry.symptoms?.length || 0), 0);
+  const inhalerNeeded = recentWeek.filter((entry) => entry.inhalerNeeded).length;
+  const averageFeeling = recentWeek.length
+    ? (recentWeek.reduce((total, entry) => total + Number(entry.feeling || 0), 0) / recentWeek.length).toFixed(1)
+    : null;
+  const sampleCount = recentWeek.length;
+  $("#asthma-symptom-stat").textContent = String(symptomMentions);
+  $("#asthma-symptom-caption").textContent = sampleCount ? `Across ${sampleCount} recent check-ins` : "No check-ins recorded yet";
+  $("#asthma-inhaler-stat").textContent = sampleCount ? `${inhalerNeeded} of ${sampleCount}` : "—";
+  $("#asthma-inhaler-caption").textContent = sampleCount ? "Recent check-ins where you marked it needed" : "No check-ins recorded yet";
+  $("#asthma-feeling-stat").textContent = averageFeeling ? `${averageFeeling} / 5` : "—";
+  $("#asthma-feeling-caption").textContent = sampleCount ? "Average feeling across recent check-ins" : "No check-ins recorded yet";
+}
+
+function drawAsthmaInhalerDots(rows) {
+  const host = $("#asthma-inhaler-trend");
+  host.replaceChildren();
+  if (!rows.length) {
+    const empty = document.createElement("p"); empty.className = "home-chart-empty"; empty.textContent = "No check-ins to show yet."; host.append(empty); return;
+  }
+  const width = 640, height = 178, left = 90, right = 16;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("aria-hidden", "true");
+  const namespace = svg.namespaceURI;
+  const addLine = (y) => {
+    const line = document.createElementNS(namespace, "line");
+    line.setAttribute("x1", String(left)); line.setAttribute("x2", String(width - right));
+    line.setAttribute("y1", String(y)); line.setAttribute("y2", String(y));
+    line.setAttribute("stroke", "#eaf1f0"); line.setAttribute("stroke-width", "1"); svg.append(line);
+  };
+  const addText = (x, y, label, anchor = "start") => {
+    const text = document.createElementNS(namespace, "text");
+    text.setAttribute("x", String(x)); text.setAttribute("y", String(y));
+    text.setAttribute("fill", "#8c9b9e"); text.setAttribute("font-size", "10"); text.setAttribute("text-anchor", anchor);
+    text.textContent = label; svg.append(text);
+  };
+  addLine(58); addLine(120);
+  addText(3, 54, "Needed"); addText(3, 116, "Not needed");
+  const x = (index) => rows.length === 1 ? (width + left - right) / 2 : left + (index / (rows.length - 1)) * (width - left - right);
+  rows.forEach((entry, index) => {
+    const circle = document.createElementNS(namespace, "circle");
+    circle.setAttribute("cx", String(x(index)));
+    circle.setAttribute("cy", String(entry.inhalerNeeded ? 58 : 120));
+    circle.setAttribute("r", rows.length > 10 ? "5" : "6");
+    circle.setAttribute("fill", entry.inhalerNeeded ? "#e87568" : "#71b78a");
+    circle.setAttribute("stroke", "#fff"); circle.setAttribute("stroke-width", "2");
+    const title = document.createElementNS(namespace, "title");
+    title.textContent = `${prettyDate(entry.createdAt)} · ${entry.inhalerNeeded ? "Rescue inhaler needed" : "Rescue inhaler not needed"}`;
+    circle.append(title); svg.append(circle);
+  });
+  if (rows.length > 1) {
+    addText(left, height - 4, prettyDate(rows[0].createdAt));
+    addText(width - right, height - 4, prettyDate(rows[rows.length - 1].createdAt), "end");
+  }
+  host.append(svg);
+}
+
 function setPatientView(view) {
   patientView = view;
   const isPatient = $("#app-shell").classList.contains("patient-mode");
   $("#patient-home").hidden = !isPatient || view !== "home";
+  $("#patient-asthma-page").hidden = !isPatient || view !== "asthma";
   $("#patient-app").hidden = !isPatient || view !== "daily-checkin";
+  if (view === "asthma") renderPatientAsthmaPage();
   document.querySelectorAll("[data-patient-view]").forEach((button) => {
     const active = button.dataset.patientView === view;
     button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active));
@@ -833,6 +925,14 @@ $("#patient-checkin-host").append($("#checkin-form"));
 document.querySelectorAll("[data-app-mode]").forEach((button) => button.addEventListener("click", () => setAppMode(button.dataset.appMode)));
 document.querySelectorAll("[data-provider-view]").forEach((button) => button.addEventListener("click", () => setProviderView(button.dataset.providerView)));
 document.querySelectorAll("[data-patient-view]").forEach((button) => button.addEventListener("click", () => setPatientView(button.dataset.patientView)));
+document.querySelectorAll("[data-open-patient-asthma]").forEach((button) => button.addEventListener("click", () => {
+  if (!$("#app-shell").classList.contains("patient-mode")) setAppMode("patient");
+  setPatientView("asthma");
+}));
+$("#asthma-open-checkin").addEventListener("click", () => {
+  setPatientView("daily-checkin");
+  requestAnimationFrame(() => $("#patient-checkin").scrollIntoView({ behavior: "smooth", block: "start" }));
+});
 document.querySelectorAll("[data-patient-target]").forEach((button) => button.addEventListener("click", () => {
   if (!$("#app-shell").classList.contains("patient-mode")) setAppMode("patient");
   setPatientView("daily-checkin");
