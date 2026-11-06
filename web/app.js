@@ -324,7 +324,9 @@ function showSymptomMix() {
   const counts = new Map();
   recent.flatMap((entry) => entry.symptoms || []).forEach((symptom) => counts.set(symptom, (counts.get(symptom) || 0) + 1));
   const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-  const colors = ["#078b8c", "#36a9db", "#37ad67", "#a64a9c", "#e56c9a", "#d89b38"];
+  // A high-separation, color-vision-friendly set for the symptom mix chart.
+  // These are intentionally independent from the mood tracker scale.
+  const colors = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#D55E00", "#56B4E9"];
   const total = sorted.reduce((sum, item) => sum + item[1], 0);
   legend.replaceChildren();
   if (!total) {
