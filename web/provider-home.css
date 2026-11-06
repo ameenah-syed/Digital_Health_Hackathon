@@ -322,9 +322,133 @@
   font-size: clamp(27px, 3vw, 36px);
 }
 
-.patient-home-update .update-banner-copy strong {
-  color: #345a50;
+.patient-home-calendar {
+  margin: 5px 0 14px;
+  padding: 20px 22px 16px;
+  border-color: #dcece7;
+  background: linear-gradient(110deg, #fff 0%, #f4fbf8 100%);
 }
+
+.patient-home-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.patient-home-calendar-heading .eyebrow,
+.trophy-shelf-heading .eyebrow,
+.patient-module-heading .eyebrow { margin: 0 0 5px; }
+
+.patient-home-calendar-heading h2 {
+  margin: 0;
+  color: #31545a;
+  font: 700 23px Manrope, sans-serif;
+}
+
+.patient-home-calendar-heading h2 strong { color: #16847d; }
+.patient-home-calendar-heading h2 span { font-size: 13px; font-weight: 600; }
+
+.patient-home-calendar-heading p:last-child {
+  margin: 5px 0 0;
+  color: #85989a;
+  font-size: 9px;
+}
+
+.patient-home-week-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #526d70;
+  font-size: 10px;
+}
+
+.patient-home-week-nav button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e0ece8;
+  border-radius: 9px;
+  background: #fff;
+  color: #16847d;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.patient-home-week-nav button:disabled { color: #bbc8c6; }
+
+.patient-home-week-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.patient-home-day {
+  min-height: 81px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #e8efed;
+  border-radius: 12px;
+  background: #fff;
+  color: #829396;
+}
+
+.patient-home-day small { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.patient-home-day strong { color: #405b60; font: 700 17px Manrope, sans-serif; }
+
+.patient-home-day span {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f1f5f4;
+  color: #a0afad;
+  font-size: 10px;
+}
+
+.patient-home-day.is-complete { border-color: #cfead9; background: #f0faf3; }
+.patient-home-day.is-complete span { background: #37ad67; color: #fff; }
+.patient-home-day.is-today { outline: 2px solid #54b6a1; outline-offset: 1px; }
+
+.patient-home-latest { margin: 12px 0 0; color: #789091; font-size: 9px; }
+
+.patient-trophy-shelf { margin: 0 0 18px; padding: 15px 19px; }
+
+.trophy-shelf-heading { display: flex; align-items: center; justify-content: space-between; }
+
+.trophy-shelf-heading h2,
+.patient-module-heading h2 {
+  margin: 0;
+  color: #30494f;
+  font: 700 15px Manrope, sans-serif;
+}
+
+.trophy-shelf-heading > span { font-size: 19px; }
+
+.trophy-shelf-items {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.trophy-item {
+  min-height: 61px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border: 1px solid #f0e8d7;
+  border-radius: 11px;
+  background: #fffcf5;
+}
+
+.trophy-item > span { font-size: 23px; }
+.trophy-item strong { color: #6c6250; font-size: 9px; }
 
 .patient-home-modules {
   max-width: 950px;
@@ -369,6 +493,220 @@
   display: none;
 }
 
+.patient-module-group { max-width: 1050px; margin: 24px auto 0; }
+.patient-module-heading { margin-bottom: 12px; }
+.patient-module-heading .eyebrow { color: #15827b; }
+
+.patient-home-module-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.patient-home-module {
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #e7eeee;
+  border-top: 4px solid #319bc7;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  text-align: center;
+  cursor: default;
+}
+
+.patient-home-module > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #eaf5fc;
+  color: #319bc7;
+  font-size: 23px;
+}
+
+.patient-home-module strong { color: #30494f; font: 700 15px Manrope, sans-serif; }
+.patient-home-module small { color: #8a999b; font-size: 9px; }
+.patient-home-module.module-violet { border-top-color: #a64a9c; }
+.patient-home-module.module-violet > span { background: #f5eff8; color: #99528e; }
+.patient-home-module.module-green { border-top-color: #37ad67; }
+.patient-home-module.module-green > span { background: #eaf7ed; color: #37ad67; }
+.patient-home-module.module-teal { border-top-color: #078b8c; }
+.patient-home-module.module-teal > span { background: #e8f7f5; color: #078b8c; }
+.patient-home-module.module-pink { border-top-color: #e56c9a; }
+.patient-home-module.module-pink > span { background: #fbeef2; color: #d96d91; }
+.patient-home-module.module-amber { border-top-color: #d89b38; }
+.patient-home-module.module-amber > span { background: #fbf4e9; color: #c78d3e; }
+
+.patient-asthma-page {
+  max-width: 1160px;
+  padding-top: 23px;
+}
+
+.patient-asthma-page[hidden] { display: none !important; }
+
+.patient-asthma-heading,
+.patient-asthma-title-group,
+.asthma-week-summary,
+.asthma-card-heading {
+  display: flex;
+  align-items: center;
+}
+
+.patient-asthma-heading {
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.patient-asthma-title-group { gap: 13px; }
+
+.asthma-back-button,
+.asthma-settings-button {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid #e4eeec;
+  border-radius: 12px;
+  background: #fff;
+  color: #4c7774;
+  box-shadow: 0 1px 4px #173c3b0b;
+}
+
+.asthma-back-button { font-size: 25px; line-height: 1; }
+.asthma-settings-button { font-size: 17px; }
+
+.patient-asthma-heading .eyebrow { margin: 0 0 3px; }
+
+.patient-asthma-heading h1 {
+  margin: 0;
+  color: #263d43;
+  font: 700 clamp(27px, 3vw, 35px) Manrope, sans-serif;
+  letter-spacing: -.8px;
+}
+
+.asthma-subtitle { margin: 4px 0 0; color: #849497; font-size: 10px; }
+
+.asthma-week-strip {
+  margin-bottom: 17px;
+  padding: 18px 20px 14px;
+}
+
+.asthma-week-summary { justify-content: space-between; gap: 18px; }
+
+.asthma-week-summary .eyebrow { margin: 0 0 4px; }
+
+.asthma-week-summary h2 {
+  margin: 0;
+  color: #31545a;
+  font: 700 20px Manrope, sans-serif;
+}
+
+.asthma-week-summary h2 strong { color: #16847d; }
+.asthma-week-summary h2 span { font-size: 12px; font-weight: 600; }
+.asthma-week-summary p:last-child { margin: 4px 0 0; color: #8a999b; font-size: 9px; }
+
+.asthma-checkin-button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 10px;
+  background: #087779;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.asthma-checkin-button span { margin-left: 7px; font-size: 14px; }
+
+.asthma-week-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.asthma-week-day {
+  min-height: 53px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #e9efee;
+  border-radius: 10px;
+  background: #fbfdfc;
+  color: #88999a;
+}
+
+.asthma-week-day small { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+
+.asthma-week-day span {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0f4f3;
+  font-size: 11px;
+}
+
+.asthma-week-day.is-complete { border-color: #d1ead9; background: #f1faf3; color: #476b56; }
+.asthma-week-day.is-complete span { background: #37ad67; color: #fff; }
+.asthma-week-day.is-today { outline: 2px solid #54b6a1; outline-offset: 1px; }
+.asthma-week-latest { margin: 11px 0 0; color: #7f9294; font-size: 9px; }
+
+.asthma-trend-stack { display: grid; gap: 14px; }
+
+.asthma-trend-card { min-width: 0; padding: 17px 20px 13px; }
+
+.asthma-card-heading { justify-content: space-between; gap: 14px; }
+.asthma-card-heading .eyebrow { margin: 0 0 3px; }
+.asthma-card-heading h2 { margin: 0; color: #30494f; font: 700 15px Manrope, sans-serif; }
+.asthma-card-heading p:last-child { margin: 4px 0 0; color: #8c9b9e; font-size: 9px; }
+
+.asthma-trend-icon,
+.asthma-stat-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 11px;
+  background: #eaf5fc;
+  color: #319bc7;
+  font-size: 17px;
+}
+
+.asthma-trend-icon.coral,
+.asthma-stat-icon.coral { background: #fff0ed; color: #e87568; }
+.asthma-stat-icon.green { background: #eaf7ed; color: #37ad67; }
+
+.asthma-trend-chart { height: 160px; margin-top: 8px; }
+.asthma-trend-chart svg { width: 100%; height: 100%; overflow: visible; }
+.asthma-trend-foot { display: flex; justify-content: space-between; gap: 12px; padding-top: 9px; border-top: 1px solid #eff3f2; color: #91a0a2; font-size: 8px; }
+.asthma-trend-foot > span:first-child { display: flex; align-items: center; gap: 7px; }
+.chart-legend-coral { width: 7px; height: 7px; border-radius: 50%; background: #e87568; }
+
+.asthma-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+  margin-top: 15px;
+}
+
+.asthma-stat-card { min-height: 142px; padding: 15px; }
+.asthma-stat-card p { margin: 10px 0 3px; color: #839396; font-size: 9px; }
+.asthma-stat-card > strong { display: block; color: #30494f; font: 700 22px Manrope, sans-serif; }
+.asthma-stat-card small { display: block; margin-top: 4px; color: #96a3a5; font-size: 8px; line-height: 1.4; }
+
 .patient-home[hidden] {
   display: none !important;
 }
@@ -391,9 +729,13 @@
 }
 
 @media (max-width: 760px) {
-  .patient-home .home-module-grid {
+  .patient-home-module-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .trophy-shelf-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .asthma-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 560px) {
@@ -430,6 +772,58 @@
   .patient-home {
     padding: 19px 13px;
   }
+
+  .patient-home-calendar { padding: 15px 12px; }
+
+  .patient-asthma-page { padding: 19px 13px; }
+
+  .asthma-week-strip { padding: 14px 12px 12px; }
+
+  .asthma-week-summary { align-items: flex-start; }
+
+  .asthma-week-days { gap: 4px; }
+
+  .asthma-week-day { min-height: 48px; flex-direction: column; gap: 4px; border-radius: 8px; }
+
+  .asthma-week-day small { font-size: 8px; }
+
+  .asthma-week-day span { width: 17px; height: 17px; font-size: 9px; }
+
+  .asthma-trend-card { padding: 14px 13px 11px; }
+
+  .asthma-trend-chart { height: 140px; }
+
+  .asthma-stat-grid { grid-template-columns: 1fr; gap: 9px; }
+
+  .asthma-stat-card { min-height: 112px; }
+
+  .patient-home-calendar-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+
+  .patient-home-week-nav { align-self: flex-end; margin-top: -33px; }
+
+  .patient-home-week-days { gap: 4px; margin-top: 12px; }
+
+  .patient-home-day { min-height: 69px; gap: 4px; border-radius: 9px; }
+
+  .patient-home-day small { font-size: 8px; }
+
+  .patient-home-day strong { font-size: 14px; }
+
+  .patient-trophy-shelf { padding: 13px; }
+
+  .trophy-item { min-height: 52px; gap: 7px; padding: 7px; }
+
+  .trophy-item > span { font-size: 19px; }
+
+  .trophy-item strong { font-size: 8px; }
+
+  .patient-home-module-grid { gap: 10px; }
+
+  .patient-home-module { min-height: 145px; padding: 12px; }
+
+  .patient-home-module strong { font-size: 13px; }
+
+  .patient-home-module small { font-size: 8px; }
 
   .patient-home-heading h1 {
     font-size: 26px;

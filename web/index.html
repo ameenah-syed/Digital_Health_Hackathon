@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=2026-11-06-provider-home">
-  <link rel="stylesheet" href="provider-home.css?v=2026-11-06-patient-sketch-v2">
+  <link rel="stylesheet" href="provider-home.css?v=2026-11-06-asthma-page-v1">
 </head>
 <body>
   <div class="shell" id="app-shell">
@@ -32,7 +32,7 @@
     <main class="main" id="dashboard">
       <header class="topbar">
         <div class="breadcrumbs">Workspace <span>/</span> Patients <span>/</span> <strong id="breadcrumb-patient">Jordan M.</strong></div>
-        <div class="top-actions"><div class="provider-view-switch" role="group" aria-label="Provider pages"><button type="button" class="provider-view-button active" data-provider-view="home" aria-pressed="true">Home</button><button type="button" class="provider-view-button" data-provider-view="dashboard" aria-pressed="false">Patient dashboard</button></div><div class="patient-view-switch" role="group" aria-label="Patient pages"><button type="button" class="provider-view-button active" data-patient-view="home" aria-pressed="true">Home</button><button type="button" class="provider-view-button" data-patient-view="daily-checkin" aria-pressed="false">Daily check-in</button></div><div class="app-switch" role="group" aria-label="Choose app"><button type="button" class="app-switch-button active" data-app-mode="provider" aria-pressed="true">Provider app</button><button type="button" class="app-switch-button" data-app-mode="patient" aria-pressed="false">Patient app</button></div><button class="dashboard-settings-button" type="button" id="dashboard-settings-button" aria-label="Dashboard settings" title="Customize dashboard"><span aria-hidden="true">⚙</span></button><span class="demo-badge"><i></i> DEMO DATA</span><button class="icon-button" aria-label="Notifications">♧<b></b></button><div class="avatar">DR</div></div>
+        <div class="top-actions"><div class="provider-view-switch" role="group" aria-label="Provider pages"><button type="button" class="provider-view-button active" data-provider-view="home" aria-pressed="true">Home</button><button type="button" class="provider-view-button" data-provider-view="dashboard" aria-pressed="false">Patient dashboard</button></div><div class="patient-view-switch" role="group" aria-label="Patient pages"><button type="button" class="provider-view-button active" data-patient-view="home" aria-pressed="true">Home</button><button type="button" class="provider-view-button" data-patient-view="asthma" aria-pressed="false">Asthma</button><button type="button" class="provider-view-button" data-patient-view="daily-checkin" aria-pressed="false">Daily check-in</button></div><div class="app-switch" role="group" aria-label="Choose app"><button type="button" class="app-switch-button active" data-app-mode="provider" aria-pressed="true">Provider app</button><button type="button" class="app-switch-button" data-app-mode="patient" aria-pressed="false">Patient app</button></div><button class="dashboard-settings-button" type="button" id="dashboard-settings-button" aria-label="Dashboard settings" title="Customize dashboard"><span aria-hidden="true">⚙</span></button><span class="demo-badge"><i></i> DEMO DATA</span><button class="icon-button" aria-label="Notifications">♧<b></b></button><div class="avatar">DR</div></div>
       </header>
 
       <section class="content provider-home" id="provider-home">
@@ -126,19 +126,40 @@
 
       <section class="content patient-home" id="patient-home" hidden>
         <div class="provider-home-heading patient-home-heading"><div><p class="eyebrow">YOUR HEALTH</p><h1 id="patient-home-name">Jordan M.</h1><div class="home-patient-subheadings"><span>Patient <strong id="patient-home-id">PT-2048</strong></span><span>Age <strong id="patient-home-age">10 · demo</strong></span><span>Condition <strong>Asthma · demo</strong></span></div></div><span class="demo-badge"><i></i> DEMO PROFILE</span></div>
-        <section class="home-update-banner card patient-home-update" aria-label="Your latest check-in"><span class="update-banner-icon">◷</span><div class="update-banner-copy"><p class="eyebrow">YOUR LATEST CHECK-IN</p><strong id="patient-home-update-summary">No check-in has been saved yet.</strong><small id="patient-home-update-meta">Only use this sample profile.</small></div><time id="patient-home-update-date"></time></section>
+        <section class="patient-home-calendar card" aria-label="Weekly check-in calendar">
+          <div class="patient-home-calendar-heading"><div><p class="eyebrow">MY CHECK-IN STREAK</p><h2><strong id="patient-home-streak">0</strong> <span>day streak</span></h2><p id="patient-home-week-summary">Check in each day to build your weekly streak.</p></div><div class="patient-home-week-nav"><button type="button" id="patient-home-week-previous" aria-label="Previous week">‹</button><strong id="patient-home-week-label">This week</strong><button type="button" id="patient-home-week-next" aria-label="Next week">›</button></div></div>
+          <div class="patient-home-week-days" id="patient-home-week-days"></div>
+          <p class="patient-home-latest" id="patient-home-latest">Your latest check-in will appear here.</p>
+        </section>
+        <section class="patient-trophy-shelf card" aria-label="Trophy shelf"><div class="trophy-shelf-heading"><div><p class="eyebrow">MY TROPHY SHELF</p><h2>Little wins along the way</h2></div><span>🏆</span></div><div class="trophy-shelf-items"><div class="trophy-item"><span>🏅</span><strong>First check-in</strong></div><div class="trophy-item"><span>🏆</span><strong>3-day streak</strong></div><div class="trophy-item"><span>🌟</span><strong>Symptom spotter</strong></div><div class="trophy-item"><span>🎖️</span><strong>Curious learner</strong></div></div></section>
         <section class="provider-home-charts patient-home-charts" aria-label="Your check-in charts">
           <article class="home-chart-card card"><div class="home-card-heading"><div><p class="eyebrow">MY BREATHING CLUES</p><h2>Symptoms over time</h2><p>Symptoms reported per check-in</p></div><span class="home-card-icon blue">⌁</span></div><div id="patient-home-symptoms-chart" class="home-chart" role="img" aria-label="Reported symptoms per check-in"></div><div class="home-chart-foot"><span><i class="chart-legend-blue"></i>Reported symptom mentions</span><span>Latest 14 entries</span></div></article>
           <article class="home-chart-card card"><div class="home-card-heading"><div><p class="eyebrow">HOW I’VE BEEN FEELING</p><h2>Feeling over time</h2><p>1 is bad · 5 is great</p></div><span class="home-card-icon green">♡</span></div><div id="patient-home-feeling-chart" class="home-chart" role="img" aria-label="Patient feeling ratings over recent check-ins"></div><div class="home-chart-foot"><span><i class="chart-legend-green"></i>Feeling rating</span><span>Latest 14 entries</span></div></article>
         </section>
-        <section class="home-modules-section patient-home-modules"><div class="home-modules-heading"><div><p class="eyebrow">YOUR DASHBOARD</p><h2>Choose a module</h2></div></div><div class="home-module-grid">
-          <button type="button" class="home-module-card module-green" data-patient-target="patient-checkin"><span class="home-module-copy"><strong>Daily check-in</strong></span></button>
-          <button type="button" class="home-module-card module-violet" data-patient-target="patient-week"><span class="home-module-copy"><strong>My week</strong></span></button>
-          <button type="button" class="home-module-card module-blue" data-patient-target="patient-breathing"><span class="home-module-copy"><strong>Breathing tracker</strong></span></button>
-          <button type="button" class="home-module-card module-teal" data-patient-target="patient-health"><span class="home-module-copy"><strong>My health</strong></span></button>
-          <button type="button" class="home-module-card module-pink" data-patient-target="patient-medicines"><span class="home-module-copy"><strong>Care tools</strong></span></button>
-          <button type="button" class="home-module-card module-amber" data-patient-target="patient-learning"><span class="home-module-copy"><strong>Learning corner</strong></span></button>
-        </div></section>
+        <section class="patient-module-group patient-condition-modules"><div class="patient-module-heading"><p class="eyebrow">CONDITIONS</p><h2>My care by condition</h2></div><div class="patient-home-module-grid"><button type="button" class="patient-home-module module-blue" data-open-patient-asthma><span>🌬️</span><strong>Asthma</strong><small>Breathing and asthma care</small></button><button type="button" class="patient-home-module module-teal"><span>♡</span><strong>General Care</strong><small>Everyday health and wellness</small></button></div></section>
+        <section class="patient-module-group patient-general-modules"><div class="patient-module-heading"><p class="eyebrow">GENERAL</p><h2>My health tools</h2></div><div class="patient-home-module-grid"><button type="button" class="patient-home-module module-violet"><span>◉</span><strong>Patient Profile</strong><small>My information and care details</small></button><button type="button" class="patient-home-module module-green"><span>✚</span><strong>Medications</strong><small>My medicine list</small></button><button type="button" class="patient-home-module module-pink"><span>▤</span><strong>Visit Summaries</strong><small>Notes from recent visits</small></button><button type="button" class="patient-home-module module-amber"><span>⌁</span><strong>Paired Devices</strong><small>Devices connected to my care</small></button><button type="button" class="patient-home-module module-blue"><span>☺</span><strong>Care Team</strong><small>People who help with my health</small></button><button type="button" class="patient-home-module module-teal"><span>✧</span><strong>Learning Center</strong><small>Learn about my health</small></button></div></section>
+        <footer class="disclaimer">Synthetic demo information · Not for clinical use · Check in with an adult</footer>
+      </section>
+
+      <section class="content patient-asthma-page" id="patient-asthma-page" hidden>
+        <header class="patient-asthma-heading">
+          <div class="patient-asthma-title-group"><button type="button" class="asthma-back-button" data-patient-view="home" aria-label="Back to Home">‹</button><div><p class="eyebrow">CONDITION OVERVIEW</p><h1>Asthma</h1><p class="asthma-subtitle">A simple look at your breathing check-ins.</p></div></div>
+          <button type="button" class="asthma-settings-button" aria-label="Asthma page settings" title="Settings">⚙</button>
+        </header>
+        <section class="asthma-week-strip card" aria-label="This week's asthma check-ins">
+          <div class="asthma-week-summary"><div><p class="eyebrow">THIS WEEK</p><h2><strong id="asthma-week-streak">0</strong> <span>day streak</span></h2><p id="asthma-week-progress">Check in each day to keep your streak going.</p></div><button type="button" class="asthma-checkin-button" id="asthma-open-checkin">Check in <span>→</span></button></div>
+          <div class="asthma-week-days" id="asthma-week-days"></div>
+          <p class="asthma-week-latest" id="asthma-week-latest">Your latest check-in will show here.</p>
+        </section>
+        <section class="asthma-trend-stack" aria-label="Asthma trends">
+          <article class="asthma-trend-card card"><div class="asthma-card-heading"><div><p class="eyebrow">TREND 01</p><h2>Breathing clues</h2><p>Symptoms reported in each check-in</p></div><span class="asthma-trend-icon blue">⌁</span></div><div class="asthma-trend-chart" id="asthma-symptoms-trend" role="img" aria-label="Reported symptoms per patient check-in"></div><div class="asthma-trend-foot"><span><i class="chart-legend-blue"></i>Symptom mentions</span><span>Recent check-ins</span></div></article>
+          <article class="asthma-trend-card card"><div class="asthma-card-heading"><div><p class="eyebrow">TREND 02</p><h2>Rescue inhaler check-ins</h2><p>Each dot represents one check-in</p></div><span class="asthma-trend-icon coral">✚</span></div><div class="asthma-trend-chart asthma-dot-chart" id="asthma-inhaler-trend" role="img" aria-label="Rescue inhaler need reported per recent check-in"></div><div class="asthma-trend-foot"><span><i class="chart-legend-coral"></i>Inhaler needed</span><span>Recent check-ins</span></div></article>
+        </section>
+        <section class="asthma-stat-grid" aria-label="Asthma summary statistics">
+          <article class="asthma-stat-card card"><span class="asthma-stat-icon blue">⌁</span><p>Symptom mentions</p><strong id="asthma-symptom-stat">—</strong><small id="asthma-symptom-caption">Across recent check-ins</small></article>
+          <article class="asthma-stat-card card"><span class="asthma-stat-icon coral">✚</span><p>Inhaler needed</p><strong id="asthma-inhaler-stat">—</strong><small id="asthma-inhaler-caption">Across recent check-ins</small></article>
+          <article class="asthma-stat-card card"><span class="asthma-stat-icon green">♡</span><p>How I’ve been feeling</p><strong id="asthma-feeling-stat">—</strong><small id="asthma-feeling-caption">Average feeling rating</small></article>
+        </section>
         <footer class="disclaimer">Synthetic demo information · Not for clinical use · Check in with an adult</footer>
       </section>
 
@@ -215,6 +236,6 @@
     <div class="settings-preview-row"><span class="settings-preview-icon green">◷</span><span><strong>Graph time range</strong><small>Set the period shown in each trend</small></span><b>Coming soon</b></div>
     <button type="button" class="settings-done-button" id="settings-done">Done</button>
   </dialog>
-  <script src="app.js?v=2026-11-06-patient-sketch-v2"></script>
+  <script src="app.js?v=2026-11-06-asthma-page-v1"></script>
 </body>
 </html>
