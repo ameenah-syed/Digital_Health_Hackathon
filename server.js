@@ -6,7 +6,7 @@ const { Database } = require("node:sqlite");
 const root = path.join(__dirname, "web");
 const dataDir = process.env.DATA_DIR || path.join(root, "data");
 fs.mkdirSync(dataDir, { recursive: true });
-const db = new Database(process.env.DB_PATH || path.join(dataDir, "airwise.db"));
+const db = new Database(process.env.DB_PATH || path.join(dataDir, "smarthome.db"));
 db.exec(`
   CREATE TABLE IF NOT EXISTS patients (
     id TEXT PRIMARY KEY,
@@ -277,4 +277,4 @@ const server = http.createServer(async (request, response) => {
 });
 
 const port = Number(process.env.PORT || 3000);
-server.listen(port, process.env.HOST || "0.0.0.0", () => console.log(`Airwise demo listening on ${port}`));
+server.listen(port, process.env.HOST || "0.0.0.0", () => console.log(`SMART@Home demo listening on ${port}`));

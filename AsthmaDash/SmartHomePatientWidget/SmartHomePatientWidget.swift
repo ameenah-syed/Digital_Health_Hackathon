@@ -78,7 +78,7 @@ private struct CheckInWidgetView: View {
 
             HStack(spacing: 0) {
                 ForEach(moods, id: \.0) { score, color in
-                    Link(destination: URL(string: "airwise://check-in?feeling=\(score)")!) {
+                    Link(destination: URL(string: "smarthome://check-in?feeling=\(score)")!) {
                         VStack(spacing: 3) {
                             WidgetBuddyFace(score: score, color: color, size: 28)
                             Text(["Bad", "Not great", "Okay", "Good", "Great"][score - 1])
@@ -91,14 +91,14 @@ private struct CheckInWidgetView: View {
             }
 
             HStack(spacing: 7) {
-                quickLink("Cough", icon: "lungs", color: Color(hex: 0x36A9DB), url: "airwise://check-in?symptom=Coughing")
-                quickLink("Wheeze", icon: "wind", color: Color(hex: 0x078B8C), url: "airwise://check-in?symptom=Wheezing")
-                quickLink("Tight chest", icon: "lungs.fill", color: Color(hex: 0xA64A9C), url: "airwise://check-in?symptom=Tight%20chest")
-                quickLink("Inhaler needed", icon: "cross.case.fill", color: Color(hex: 0xE56C9A), url: "airwise://check-in?inhalerNeeded=true")
+                quickLink("Cough", icon: "lungs", color: Color(hex: 0x36A9DB), url: "smarthome://check-in?symptom=Coughing")
+                quickLink("Wheeze", icon: "wind", color: Color(hex: 0x078B8C), url: "smarthome://check-in?symptom=Wheezing")
+                quickLink("Tight chest", icon: "lungs.fill", color: Color(hex: 0xA64A9C), url: "smarthome://check-in?symptom=Tight%20chest")
+                quickLink("Inhaler needed", icon: "cross.case.fill", color: Color(hex: 0xE56C9A), url: "smarthome://check-in?inhalerNeeded=true")
             }
         }
         .padding(.horizontal, 4)
-        .widgetURL(URL(string: "airwise://check-in"))
+        .widgetURL(URL(string: "smarthome://check-in"))
         .containerBackground(.background, for: .widget)
     }
 
@@ -115,15 +115,15 @@ private struct CheckInWidgetView: View {
     }
 }
 
-struct AirwisePatientWidget: Widget {
-    let kind = "AirwisePatientWidget"
+struct SmartHomePatientWidget: Widget {
+    let kind = "SmartHomePatientWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: CheckInProvider()) { _ in
             CheckInWidgetView()
         }
         .configurationDisplayName("Asthma check-in")
-        .description("Choose a feeling or symptom, then finish your check-in in Airwise Patient.")
+        .description("Choose a feeling or symptom, then finish your check-in in SMART@Home Patient.")
         .supportedFamilies([.systemMedium])
     }
 }
@@ -137,7 +137,7 @@ private extension Color {
 }
 
 #Preview(as: .systemMedium) {
-    AirwisePatientWidget()
+    SmartHomePatientWidget()
 } timeline: {
     CheckInEntry(date: .now)
 }

@@ -24,7 +24,7 @@ let visibleMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(),
 let selectedRing = "mood";
 let patientWeekOffset = 0;
 let patientHomeWeekOffset = 0;
-let completedPatientLessons = new Set(JSON.parse(localStorage.getItem("airwise-kids-lessons") || "[]"));
+let completedPatientLessons = new Set(JSON.parse(localStorage.getItem("smarthome-kids-lessons") || "[]"));
 let patientModeInitialized = false;
 let providerView = "home";
 let patientView = "home";
@@ -604,7 +604,7 @@ function renderPatientLessons() {
     const source = document.createElement("a"); source.href = lesson.source; source.target = "_blank"; source.rel = "noreferrer"; source.textContent = "Learn more with an adult ↗";
     const complete = document.createElement("button"); complete.type = "button"; complete.className = "lesson-complete"; complete.textContent = completedPatientLessons.has(lesson.id) ? "✓ Lesson badge earned" : "☆ I learned this!";
     complete.addEventListener("click", () => {
-      completedPatientLessons.add(lesson.id); localStorage.setItem("airwise-kids-lessons", JSON.stringify([...completedPatientLessons]));
+      completedPatientLessons.add(lesson.id); localStorage.setItem("smarthome-kids-lessons", JSON.stringify([...completedPatientLessons]));
       renderPatientLessons(); renderPatientWeek();
     });
     card.append(summary, detail, source, complete); host.append(card);
@@ -616,9 +616,9 @@ function renderPatientLessons() {
 
 function renderPatientApp() {
   renderPatientWeek(); renderPatientBreathing(); renderPatientLessons();
-  $("#controller-check").checked = localStorage.getItem("airwise-controller-taken") !== "false";
-  $("#rescue-check").checked = localStorage.getItem("airwise-rescue-available") !== "false";
-  $("#device-check").checked = localStorage.getItem("airwise-nebulizer-ready") !== "false";
+  $("#controller-check").checked = localStorage.getItem("smarthome-controller-taken") !== "false";
+  $("#rescue-check").checked = localStorage.getItem("smarthome-rescue-available") !== "false";
+  $("#device-check").checked = localStorage.getItem("smarthome-nebulizer-ready") !== "false";
 }
 
 function renderPatientHome() {
@@ -820,7 +820,7 @@ function exportSummary() {
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `airwise-${selectedPatientId}-synthetic-checkins.csv`;
+  anchor.download = `smarthome-${selectedPatientId}-synthetic-checkins.csv`;
   anchor.click();
   URL.revokeObjectURL(url);
 }
@@ -873,12 +873,12 @@ $("#patient-home-week-previous").addEventListener("click", () => { patientHomeWe
 $("#patient-home-week-next").addEventListener("click", () => { if (patientHomeWeekOffset < 0) patientHomeWeekOffset += 1; renderPatientHomeWeek(); });
 $("#patient-provider-link").addEventListener("click", () => setAppMode("provider"));
 $("#controller-check").addEventListener("change", (event) => {
-  localStorage.setItem("airwise-controller-taken", String(event.target.checked));
+  localStorage.setItem("smarthome-controller-taken", String(event.target.checked));
   $("input[name=medication][value=yes]").checked = event.target.checked;
   $("input[name=medication][value=no]").checked = !event.target.checked;
 });
-$("#rescue-check").addEventListener("change", (event) => localStorage.setItem("airwise-rescue-available", String(event.target.checked)));
-$("#device-check").addEventListener("change", (event) => localStorage.setItem("airwise-nebulizer-ready", String(event.target.checked)));
+$("#rescue-check").addEventListener("change", (event) => localStorage.setItem("smarthome-rescue-available", String(event.target.checked)));
+$("#device-check").addEventListener("change", (event) => localStorage.setItem("smarthome-nebulizer-ready", String(event.target.checked)));
 $("#patient-preview-button").addEventListener("click", openPatientPreview);
 $("#close-modal").addEventListener("click", closePatientPreview);
 $("#patient-modal").addEventListener("click", (event) => { if (event.target.id === "patient-modal") closePatientPreview(); });
@@ -899,7 +899,7 @@ document.querySelectorAll("input[name=inhaler]").forEach((input) => input.addEve
 }));
 document.querySelectorAll("input[name=medication]").forEach((input) => input.addEventListener("change", () => {
   const taken = $("input[name=medication]:checked").value === "yes";
-  localStorage.setItem("airwise-controller-taken", String(taken));
+    localStorage.setItem("smarthome-controller-taken", String(taken));
   $("#controller-check").checked = taken;
 }));
 document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !$("#patient-modal").hidden) closePatientPreview(); });
