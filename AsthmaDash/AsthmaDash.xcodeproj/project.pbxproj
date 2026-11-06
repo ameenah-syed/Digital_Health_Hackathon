@@ -6,10 +6,58 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		86CE017B309E48E90076F68E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CE017A309E48E80076F68E /* WidgetKit.framework */; };
+		86CE017D309E48E90076F68E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CE017C309E48E90076F68E /* SwiftUI.framework */; };
+		86CE018B309E48E90076F68F /* AirwisePatientWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 86CE0178309E48E80076F68E /* AirwisePatientWidgetExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		86CE018C309E48E90076F68F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 86CE0143309E298E0076F68E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 86CE0177309E48E80076F68E;
+			remoteInfo = AirwisePatientWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		86CE018A309E48E90076F68F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				86CE018B309E48E90076F68F /* AirwisePatientWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		86CE014B309E298E0076F68E /* AsthmaDash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AsthmaDash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86CE015D309E3AD80076F68E /* PatientApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PatientApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		86CE0178309E48E80076F68E /* AirwisePatientWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AirwisePatientWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		86CE017A309E48E80076F68E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = /System/Library/Frameworks/WidgetKit.framework; sourceTree = "<absolute>"; };
+		86CE017C309E48E90076F68E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = /System/Library/Frameworks/SwiftUI.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		86CE0173309E48D00076F68E /* Exceptions for "PatientApp" folder in "PatientApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 86CE015C309E3AD80076F68E /* PatientApp */;
+		};
+		86CE0186309E48E90076F68E /* Exceptions for "AirwisePatientWidget" folder in "AirwisePatientWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 86CE0177309E48E80076F68E /* AirwisePatientWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		86CE014D309E298E0076F68E /* AsthmaDash */ = {
@@ -19,7 +67,18 @@
 		};
 		86CE015E309E3AD80076F68E /* PatientApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				86CE0173309E48D00076F68E /* Exceptions for "PatientApp" folder in "PatientApp" target */,
+			);
 			path = PatientApp;
+			sourceTree = "<group>";
+		};
+		86CE017E309E48E90076F68E /* AirwisePatientWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				86CE0186309E48E90076F68E /* Exceptions for "AirwisePatientWidget" folder in "AirwisePatientWidgetExtension" target */,
+			);
+			path = AirwisePatientWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -35,6 +94,13 @@
 			files = (
 			);
 		};
+		86CE0175309E48E80076F68E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				86CE017D309E48E90076F68E /* SwiftUI.framework in Frameworks */,
+				86CE017B309E48E90076F68E /* WidgetKit.framework in Frameworks */,
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -43,6 +109,8 @@
 			children = (
 				86CE014D309E298E0076F68E /* AsthmaDash */,
 				86CE015E309E3AD80076F68E /* PatientApp */,
+				86CE017E309E48E90076F68E /* AirwisePatientWidget */,
+				86CE0179309E48E80076F68E /* Frameworks */,
 				86CE014C309E298E0076F68E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,8 +120,18 @@
 			children = (
 				86CE014B309E298E0076F68E /* AsthmaDash.app */,
 				86CE015D309E3AD80076F68E /* PatientApp.app */,
+				86CE0178309E48E80076F68E /* AirwisePatientWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		86CE0179309E48E80076F68E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				86CE017A309E48E80076F68E /* WidgetKit.framework */,
+				86CE017C309E48E90076F68E /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,8 +162,12 @@
 				86CE0159309E3AD80076F68E /* Sources */,
 				86CE015A309E3AD80076F68E /* Frameworks */,
 				86CE015B309E3AD80076F68E /* Resources */,
+				86CE018A309E48E90076F68F /* Embed App Extensions */,
 			);
 			buildRules = (
+			);
+			dependencies = (
+				86CE018D309E48E90076F68F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				86CE015E309E3AD80076F68E /* PatientApp */,
@@ -94,6 +176,24 @@
 			productName = PatientApp;
 			productReference = 86CE015D309E3AD80076F68E /* PatientApp.app */;
 			productType = "com.apple.product-type.application";
+		};
+		86CE0177309E48E80076F68E /* AirwisePatientWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 86CE0187309E48E90076F68E /* Build configuration list for PBXNativeTarget "AirwisePatientWidgetExtension" */;
+			buildPhases = (
+				86CE0174309E48E80076F68E /* Sources */,
+				86CE0175309E48E80076F68E /* Frameworks */,
+				86CE0176309E48E80076F68E /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				86CE017E309E48E90076F68E /* AirwisePatientWidget */,
+			);
+			name = AirwisePatientWidgetExtension;
+			productName = AirwisePatientWidgetExtension;
+			productReference = 86CE0178309E48E80076F68E /* AirwisePatientWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -109,6 +209,9 @@
 						CreatedOnToolsVersion = 27.1;
 					};
 					86CE015C309E3AD80076F68E = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					86CE0177309E48E80076F68E = {
 						CreatedOnToolsVersion = 27.1;
 					};
 				};
@@ -129,6 +232,7 @@
 			targets = (
 				86CE014A309E298E0076F68E /* AsthmaDash */,
 				86CE015C309E3AD80076F68E /* PatientApp */,
+				86CE0177309E48E80076F68E /* AirwisePatientWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -140,6 +244,11 @@
 			);
 		};
 		86CE015B309E3AD80076F68E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		86CE0176309E48E80076F68E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -157,7 +266,20 @@
 			files = (
 			);
 		};
+		86CE0174309E48E80076F68E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		86CE018D309E48E90076F68F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 86CE0177309E48E80076F68E /* AirwisePatientWidgetExtension */;
+			targetProxy = 86CE018C309E48E90076F68F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		86CE0154309E29900076F68E /* Debug configuration for PBXProject "AsthmaDash" */ = {
@@ -369,6 +491,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PatientApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Airwise Patient";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -404,6 +527,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PatientApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Airwise Patient";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -431,6 +555,86 @@
 			};
 			name = Release;
 		};
+		86CE0188309E48E90076F68E /* Debug configuration for PBXNativeTarget "AirwisePatientWidgetExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AirwisePatientWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AirwisePatientWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.digitalhealth.PatientApp.AirwisePatientWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		86CE0189309E48E90076F68E /* Release configuration for PBXNativeTarget "AirwisePatientWidgetExtension" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AirwisePatientWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AirwisePatientWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.digitalhealth.PatientApp.AirwisePatientWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -455,6 +659,14 @@
 			buildConfigurations = (
 				86CE0166309E3ADA0076F68E /* Debug configuration for PBXNativeTarget "PatientApp" */,
 				86CE0167309E3ADA0076F68E /* Release configuration for PBXNativeTarget "PatientApp" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		86CE0187309E48E90076F68E /* Build configuration list for PBXNativeTarget "AirwisePatientWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				86CE0188309E48E90076F68E /* Debug configuration for PBXNativeTarget "AirwisePatientWidgetExtension" */,
+				86CE0189309E48E90076F68E /* Release configuration for PBXNativeTarget "AirwisePatientWidgetExtension" */,
 			);
 			defaultConfigurationName = Release;
 		};

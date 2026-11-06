@@ -240,27 +240,98 @@ function showPatterns() {
   renderCounts("#medication-chips", recent.filter((item) => item.medicationTaken).map(() => "Medication taken"));
 }
 
-function showChart() {
-  const host = $("#feeling-chart");
+function showSymptomTrend() {
+  const host = $("#symptom-trend-chart");
   host.replaceChildren();
-  const recent = entriesThroughSelectedDay().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  const end = new Date(selectedDate); end.setHours(23, 59, 59, 999);
+  const recent = patientEntries()
+    .filter((entry) => new Date(entry.createdAt) <= end)
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    .slice(-14);
   if (!recent.length) {
-    host.innerHTML = '<p class="chart-empty">No check-ins recorded for this date range.</p>';
+    host.innerHTML = '<p class="chart-empty">No symptom check-ins recorded yet.</p>';
     return;
   }
+
+  const width = 560;
+  const height = 164;
+  const left = 10;
+  const right = 12;
+  const top = 12;
+  const bottom = 24;
+  const max = Math.max(3, ...recent.map((entry) => (entry.symptoms || []).length));
+  const plotHeight = height - top - bottom;
+  const plotWidth = width - left - right;
+  const xAt = (index) => recent.length === 1 ? left + plotWidth / 2 : left + (index / (recent.length - 1)) * plotWidth;
+  const yAt = (count) => top + plotHeight - (count / max) * plotHeight;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("aria-hidden", "true");
+
+  [0, Math.ceil(max / 2), max].forEach((tick) => {
+    const y = yAt(tick);
+    const line = document.createElementNS(svg.namespaceURI, "line");
+    line.setAttribute("x1", String(left)); line.setAttribute("x2", String(width - right));
+    line.setAttribute("y1", String(y)); line.setAttribute("y2", String(y));
+    line.setAttribute("class", "trend-gridline"); svg.append(line);
+  });
+  const points = recent.map((entry, index) => `${xAt(index)},${yAt((entry.symptoms || []).length)}`).join(" ");
+  const line = document.createElementNS(svg.namespaceURI, "polyline");
+  line.setAttribute("points", points); line.setAttribute("class", "trend-line"); svg.append(line);
   recent.forEach((entry, index) => {
-    const col = document.createElement("div");
-    col.className = `chart-col${index === recent.length - 1 ? " latest" : ""}`;
-    const bar = document.createElement("div");
-    bar.className = "chart-bar";
-    bar.style.height = `${Math.max(16, (entry.feeling / 5) * 100)}%`;
-    bar.style.background = `linear-gradient(180deg, ${feelingInfo[entry.feeling].color}, color-mix(in srgb, ${feelingInfo[entry.feeling].color} 64%, white))`;
-    bar.title = `${entry.feeling}/5 · ${feelingInfo[entry.feeling].label}`;
-    const day = document.createElement("span");
-    day.className = "chart-day";
-    day.textContent = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(new Date(entry.createdAt));
-    col.append(bar, day);
-    host.append(col);
+    const count = (entry.symptoms || []).length;
+    const point = document.createElementNS(svg.namespaceURI, "circle");
+    point.setAttribute("cx", String(xAt(index))); point.setAttribute("cy", String(yAt(count)));
+    point.setAttribute("r", "4"); point.setAttribute("class", "trend-point");
+    const title = document.createElementNS(svg.namespaceURI, "title");
+    title.textContent = `${prettyDate(entry.createdAt)} · ${count} symptom${count === 1 ? "" : "s"}`;
+    point.append(title); svg.append(point);
+  });
+  host.append(svg);
+  $("#trend-max-label").textContent = String(max);
+  $("#trend-mid-label").textContent = String(Math.ceil(max / 2));
+
+  const labels = document.createElement("div");
+  labels.className = "trend-date-labels";
+  [...new Set([0, Math.floor((recent.length - 1) / 2), recent.length - 1])].forEach((index) => {
+    const label = document.createElement("span");
+    label.textContent = prettyDate(recent[index].createdAt);
+    labels.append(label);
+  });
+  host.append(labels);
+}
+
+function showSymptomMix() {
+  const donut = $("#symptom-donut");
+  const legend = $("#symptom-pie-legend");
+  const recent = entriesThroughSelectedDay();
+  const counts = new Map();
+  recent.flatMap((entry) => entry.symptoms || []).forEach((symptom) => counts.set(symptom, (counts.get(symptom) || 0) + 1));
+  const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  const colors = ["#078b8c", "#36a9db", "#37ad67", "#a64a9c", "#e56c9a", "#d89b38"];
+  const total = sorted.reduce((sum, item) => sum + item[1], 0);
+  legend.replaceChildren();
+  if (!total) {
+    donut.style.background = "#edf2f1";
+    donut.setAttribute("aria-label", "No symptoms reported in the selected period");
+    const empty = document.createElement("span"); empty.className = "pie-empty"; empty.textContent = "No reports"; legend.append(empty);
+    return;
+  }
+  let offset = 0;
+  const slices = sorted.map(([, count], index) => {
+    const start = offset;
+    offset += (count / total) * 100;
+    return `${colors[index % colors.length]} ${start}% ${offset}%`;
+  });
+  donut.style.background = `conic-gradient(${slices.join(",")})`;
+  donut.setAttribute("aria-label", sorted.map(([name, count]) => `${name}: ${count}`).join(", "));
+  sorted.forEach(([name, count], index) => {
+    const item = document.createElement("div"); item.className = "pie-legend-item";
+    const swatch = document.createElement("i"); swatch.style.backgroundColor = colors[index % colors.length];
+    const label = document.createElement("span"); label.textContent = name;
+    const value = document.createElement("b"); value.textContent = String(count);
+    item.append(swatch, label, value); legend.append(item);
   });
 }
 
@@ -348,7 +419,8 @@ function showHistory() {
 function render() {
   renderCalendar();
   showLatest();
-  showChart();
+  showSymptomTrend();
+  showSymptomMix();
   showPatterns();
   showHistory();
 }

@@ -6,10 +6,12 @@ Airwise is a small asthma check-in prototype with two separate SwiftUI iOS apps 
 
 Open `AsthmaDash/AsthmaDash.xcodeproj` in Xcode and choose an iPhone simulator. The project has two schemes:
 
+- `PatientApp` launches the patient experience with a compact week calendar, streak badges, check-in, condition and care tiles, and a Provider tab. Its embedded WidgetKit extension offers quick mood/symptom/inhaler shortcuts.
 - `ProviderApp` launches the provider dashboard with patient metrics and symptom charts.
-- `PatientApp` launches the kid-friendly check-in, symptom education, streaks, and badges.
 
-The native apps currently keep their local demo data separate. Check-ins entered in `PatientApp` do not appear in `ProviderApp`; connecting them needs an approved shared data service or iOS shared-container entitlement. The browser demo's patient and provider views do share the database described below.
+The patient and provider tabs inside `PatientApp` share live in-memory check-ins. The standalone `ProviderApp` reads and writes the same local API/database used by the browser demo. Run `npm start` from the repository root before launching the iOS apps to enable this cross-app sync. Without the local server, patient check-ins stay on the device and the UI reports that state. Medication and nebulizer readiness checkboxes are sample tracking only and do not give dosing instructions.
+
+To add the patient check-in widget in the iPhone simulator, long-press the Home Screen, tap **Edit** → **Add Widget**, then choose **Airwise Check-in**. Tapping an answer opens the patient app with that answer prefilled; tap **Save my check-in** to submit it.
 
 ## Run the browser demo locally
 
