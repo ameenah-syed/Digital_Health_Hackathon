@@ -5,9 +5,16 @@ const feelingInfo = {
   4: { label: "Good", color: "#79bd69" },
   5: { label: "Great", color: "#36a977" },
 };
-const reasonChoices = ["Exercise", "Cold air", "Pollen / allergies", "Smoke / pollution", "Illness", "Other"];
-const timingChoices = ["Morning", "During activity", "After activity", "Evening", "At night", "No pattern"];
-const symptomChoices = ["Coughing", "Wheezing", "Tight chest", "Shortness of breath", "Activity limits"];
+const reasonChoices = ["Running or playing", "Cold air", "Allergies or pollen", "Smoke or strong smells", "A cold", "I'm not sure"];
+const timingChoices = ["Morning", "During activity", "After activity", "Evening", "At night", "Not sure"];
+const symptomChoices = ["Coughing", "Wheezing", "Tight chest", "Hard to breathe", "Hard to keep playing"];
+const patientLessons = [
+  { id: "asthma", title: "What is asthma?", subtitle: "Meet your airways", icon: "◉", detail: "Asthma can make the small airways in your lungs swell or get tight. That can make breathing feel harder. With help from trusted adults and your care team, many kids with asthma can play, learn, and do the things they enjoy.", source: "https://www.nhlbi.nih.gov/health/asthma/children" },
+  { id: "symptoms", title: "Spot the signs", subtitle: "Your body gives clues", icon: "◎", detail: "Coughing, a whistling sound when breathing, a tight chest, or feeling short of breath can be clues. These feelings can have other causes too. A trusted adult and your healthcare team can help figure out what they mean.", source: "https://www.nhlbi.nih.gov/health/asthma/symptoms" },
+  { id: "diagnosis", title: "How do doctors know?", subtitle: "You are part of the team", icon: "＋", detail: "A doctor or nurse asks about your health and listens to you breathe. They may use a breathing test, too. One symptom by itself does not tell you whether you have asthma. Only your healthcare team can diagnose asthma.", source: "https://www.nhlbi.nih.gov/health/asthma/diagnosis" },
+  { id: "care-plan", title: "My asthma helper plan", subtitle: "Make it with an adult", icon: "⌖", detail: "Your personal asthma action plan is made with your healthcare team. It tells you and your adults which medicines to use and what to do when symptoms happen. Ask a trusted adult to help you follow your own plan. This app cannot make or change that plan.", source: "https://www.nhlbi.nih.gov/health/asthma/treatment-action-plan" },
+];
+const syntheticAges = { "PT-2048": 10, "PT-3107": 12, "PT-4821": 9, "PT-5639": 11 };
 let entries = [];
 let patients = [];
 let selectedPatientId = "PT-2048";
@@ -15,6 +22,11 @@ let toastTimer;
 let selectedDate = localStartOfDay(new Date());
 let visibleMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 let selectedRing = "mood";
+let patientWeekOffset = 0;
+let completedPatientLessons = new Set(JSON.parse(localStorage.getItem("airwise-kids-lessons") || "[]"));
+let patientModeInitialized = false;
+let providerView = "home";
+let patientView = "home";
 
 const $ = (selector) => document.querySelector(selector);
 const safeText = (value) => String(value ?? "");
@@ -149,6 +161,7 @@ function renderFeelingOptions() {
 }
 
 function openPatientPreview() {
+  $("#patient-modal").querySelector(".patient-modal").insertBefore($("#checkin-form"), $("#patient-modal").querySelector(".modal-note"));
   $("#patient-modal").hidden = false;
   document.body.classList.add("modal-open");
   $("#close-modal").focus();
@@ -191,7 +204,8 @@ function renderPatientList() {
 function closePatientPreview() {
   $("#patient-modal").hidden = true;
   document.body.classList.remove("modal-open");
-  $("#patient-preview-button").focus();
+  $("#patient-checkin-host").append($("#checkin-form"));
+  if (!$("#app-shell").classList.contains("patient-mode")) $("#patient-preview-button").focus();
 }
 function toast(message) {
   const host = $("#toast");
@@ -423,6 +437,249 @@ function render() {
   showSymptomMix();
   showPatterns();
   showHistory();
+  renderProviderHome();
+  renderPatientHome();
+  renderPatientApp();
+}
+
+function drawHomeTrend(targetSelector, rows, valueFor, color, minValue = 0, maxFloor = 3) {
+  const host = $(targetSelector); host.replaceChildren();
+  if (!rows.length) {
+    const empty = document.createElement("p"); empty.className = "home-chart-empty"; empty.textContent = "No check-ins to show yet."; host.append(empty); return;
+  }
+  const width = 640, height = 178, left = 34, right = 12, top = 10, bottom = 32;
+  const values = rows.map(valueFor); const maxValue = Math.max(maxFloor, ...values);
+  const range = maxValue - minValue || 1;
+  const x = (index) => rows.length === 1 ? (width - left - right) / 2 + left : left + (index / (rows.length - 1)) * (width - left - right);
+  const y = (value) => top + ((maxValue - value) / range) * (height - top - bottom);
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`); svg.setAttribute("preserveAspectRatio", "none");
+  const ticks = [...new Set([minValue, Math.round((minValue + maxValue) / 2), maxValue])];
+  ticks.forEach((tick) => {
+    const grid = document.createElementNS(svg.namespaceURI, "line"); grid.setAttribute("x1", String(left)); grid.setAttribute("x2", String(width - right)); grid.setAttribute("y1", String(y(tick))); grid.setAttribute("y2", String(y(tick))); grid.setAttribute("stroke", "#edf2f1"); grid.setAttribute("stroke-width", "1"); svg.append(grid);
+    const label = document.createElementNS(svg.namespaceURI, "text"); label.setAttribute("x", "0"); label.setAttribute("y", String(y(tick) + 3)); label.setAttribute("fill", "#9aa8aa"); label.setAttribute("font-size", "10"); label.textContent = String(tick); svg.append(label);
+  });
+  const points = rows.map((row, index) => `${x(index)},${y(valueFor(row))}`).join(" ");
+  const area = document.createElementNS(svg.namespaceURI, "polygon"); area.setAttribute("points", `${x(0)},${height - bottom} ${points} ${x(rows.length - 1)},${height - bottom}`); area.setAttribute("fill", color); area.setAttribute("fill-opacity", ".10"); svg.append(area);
+  const line = document.createElementNS(svg.namespaceURI, "polyline"); line.setAttribute("points", points); line.setAttribute("fill", "none"); line.setAttribute("stroke", color); line.setAttribute("stroke-width", "3"); line.setAttribute("stroke-linecap", "round"); line.setAttribute("stroke-linejoin", "round"); svg.append(line);
+  rows.forEach((row, index) => {
+    const dot = document.createElementNS(svg.namespaceURI, "circle"); dot.setAttribute("cx", String(x(index))); dot.setAttribute("cy", String(y(valueFor(row)))); dot.setAttribute("r", "3.5"); dot.setAttribute("fill", "#fff"); dot.setAttribute("stroke", color); dot.setAttribute("stroke-width", "2");
+    const title = document.createElementNS(svg.namespaceURI, "title"); title.textContent = `${prettyDate(row.createdAt)} · ${valueFor(row)}`; dot.append(title); svg.append(dot);
+  });
+  [...new Set([0, Math.floor((rows.length - 1) / 2), rows.length - 1])].forEach((index) => {
+    const label = document.createElementNS(svg.namespaceURI, "text"); label.setAttribute("x", String(x(index))); label.setAttribute("y", String(height - 7)); label.setAttribute("fill", "#99a6a8"); label.setAttribute("font-size", "9"); label.setAttribute("text-anchor", index === 0 ? "start" : index === rows.length - 1 ? "end" : "middle"); label.textContent = prettyDate(rows[index].createdAt); svg.append(label);
+  });
+  host.append(svg);
+}
+
+function renderProviderHome() {
+  const patient = patients.find((item) => item.id === selectedPatientId);
+  if (!patient) return;
+  const history = patientEntries().slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const latest = history[0];
+  $("#home-patient-name").textContent = patient.name;
+  $("#home-patient-id").textContent = patient.id;
+  $("#home-patient-age").textContent = `${syntheticAges[patient.id] ?? "—"} · demo`;
+  const summary = $("#home-update-summary"), meta = $("#home-update-meta"), date = $("#home-update-date");
+  if (latest) {
+    const feeling = feelingInfo[latest.feeling];
+    const symptomSummary = latest.symptoms?.length ? `${latest.symptoms.length} symptom${latest.symptoms.length === 1 ? "" : "s"} reported` : "No symptoms reported";
+    summary.textContent = `Latest check-in: feeling ${feeling.label.toLowerCase()} (${latest.feeling}/5); ${latest.inhalerNeeded ? "rescue inhaler needed" : "no rescue inhaler reported"}; ${symptomSummary}.`;
+    meta.textContent = `Latest patient check-in · ${prettyTime(latest.createdAt)} · synthetic demo data`;
+    date.textContent = prettyDate(latest.createdAt);
+  } else {
+    summary.textContent = "No check-in has been recorded yet.";
+    meta.textContent = "Synthetic demo data";
+    date.textContent = "—";
+  }
+
+  const chronological = history.slice(0, 14).reverse();
+  drawHomeTrend("#home-symptoms-chart", chronological, (entry) => entry.symptoms?.length || 0, "#319bc7", 0, 3);
+  drawHomeTrend("#home-feeling-chart", chronological, (entry) => entry.feeling, "#37ad67", 1, 5);
+}
+
+function setProviderView(view) {
+  providerView = view;
+  const isPatientApp = $("#app-shell").classList.contains("patient-mode");
+  $("#provider-home").hidden = isPatientApp || view !== "home";
+  $("#provider-app").hidden = isPatientApp || view !== "dashboard";
+  document.querySelectorAll("[data-provider-view]").forEach((button) => {
+    const active = button.dataset.providerView === view;
+    button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function patientStreak() {
+  const days = new Set(patientEntries().map((entry) => localDateKey(new Date(entry.createdAt))));
+  const cursor = localStartOfDay(new Date());
+  if (!days.has(localDateKey(cursor))) cursor.setDate(cursor.getDate() - 1);
+  let streak = 0;
+  while (days.has(localDateKey(cursor))) { streak += 1; cursor.setDate(cursor.getDate() - 1); }
+  return streak;
+}
+
+function renderPatientWeek() {
+  const today = localStartOfDay(new Date());
+  const start = new Date(today);
+  start.setDate(start.getDate() - start.getDay() + patientWeekOffset * 7);
+  const daysHost = $("#patient-week-days");
+  daysHost.replaceChildren();
+  for (let index = 0; index < 7; index += 1) {
+    const date = new Date(start); date.setDate(start.getDate() + index);
+    const tracked = entriesOn(date).length > 0;
+    const day = document.createElement("div");
+    day.className = `week-day${tracked ? " tracked" : ""}${localDateKey(date) === localDateKey(today) ? " today" : ""}`;
+    const name = document.createElement("small"); name.textContent = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date).toUpperCase();
+    const number = document.createElement("strong"); number.textContent = String(date.getDate());
+    const mark = document.createElement("i"); mark.textContent = tracked ? "✓" : "·";
+    day.append(name, number, mark); daysHost.append(day);
+  }
+  const end = new Date(start); end.setDate(start.getDate() + 6);
+  $("#patient-week-label").textContent = patientWeekOffset === 0 ? "This week" : `${prettyDate(start)} – ${prettyDate(end)}`;
+  $("#patient-week-next").disabled = patientWeekOffset >= 0;
+  $("#patient-streak").textContent = String(patientStreak());
+
+  const badges = [
+    ["first-check-in", "★", "First check-in", patientEntries().length > 0],
+    ["streak-3", "♨", "3-day streak", patientStreak() >= 3],
+    ["streak-7", "✿", "7-day streak", patientStreak() >= 7],
+    ["symptom-spotter", "◎", "Symptom spotter", patientEntries().some((entry) => entry.symptoms?.length)],
+    ["curious-learner", "▤", "Curious learner", completedPatientLessons.size >= 3],
+  ];
+  const badgesHost = $("#patient-badges"); badgesHost.replaceChildren();
+  badges.forEach(([id, icon, label, earned]) => {
+    const badge = document.createElement("span"); badge.className = `badge-chip${earned ? " earned" : ""}`;
+    badge.textContent = `${earned ? icon : "🔒"} ${label}`; badge.title = earned ? "Earned" : "Keep checking in to earn this badge";
+    badgesHost.append(badge);
+  });
+}
+
+function renderPatientBreathing() {
+  const host = $("#patient-breathing-chart"); host.replaceChildren();
+  const recent = patientEntries().slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).slice(-14);
+  if (!recent.length) {
+    const empty = document.createElement("p"); empty.className = "patient-chart-empty"; empty.textContent = "Add a few check-ins and your breathing story will start to appear here."; host.append(empty);
+    $("#patient-breathing-story").textContent = "Keep checking in to see your breathing clues over time.";
+    return;
+  }
+  const width = 650, height = 160, padX = 14, padY = 12;
+  const maxCount = Math.max(3, ...recent.map((entry) => entry.symptoms?.length || 0));
+  const x = (i) => recent.length === 1 ? width / 2 : padX + (i / (recent.length - 1)) * (width - padX * 2);
+  const y = (count) => height - padY - (count / maxCount) * (height - padY * 2);
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("viewBox", `0 0 ${width} ${height}`); svg.setAttribute("preserveAspectRatio", "none");
+  [0, Math.ceil(maxCount / 2), maxCount].forEach((tick) => {
+    const line = document.createElementNS(svg.namespaceURI, "line"); line.setAttribute("x1", String(padX)); line.setAttribute("x2", String(width - padX)); line.setAttribute("y1", String(y(tick))); line.setAttribute("y2", String(y(tick))); line.setAttribute("stroke", "#eaf1f0"); line.setAttribute("stroke-width", "1"); svg.append(line);
+  });
+  const fill = document.createElementNS(svg.namespaceURI, "polygon");
+  fill.setAttribute("points", `${x(0)},${height - padY} ${recent.map((entry, i) => `${x(i)},${y(entry.symptoms?.length || 0)}`).join(" ")} ${x(recent.length - 1)},${height - padY}`); fill.setAttribute("fill", "#36a9db"); fill.setAttribute("fill-opacity", ".11"); svg.append(fill);
+  const path = document.createElementNS(svg.namespaceURI, "polyline"); path.setAttribute("points", recent.map((entry, i) => `${x(i)},${y(entry.symptoms?.length || 0)}`).join(" ")); path.setAttribute("fill", "none"); path.setAttribute("stroke", "#319bc7"); path.setAttribute("stroke-width", "3"); path.setAttribute("stroke-linecap", "round"); path.setAttribute("stroke-linejoin", "round"); svg.append(path);
+  recent.forEach((entry, i) => {
+    const point = document.createElementNS(svg.namespaceURI, "circle"); point.setAttribute("cx", String(x(i))); point.setAttribute("cy", String(y(entry.symptoms?.length || 0))); point.setAttribute("r", "4"); point.setAttribute("fill", "#fff"); point.setAttribute("stroke", "#078b8c"); point.setAttribute("stroke-width", "2");
+    const title = document.createElementNS(svg.namespaceURI, "title"); title.textContent = `${prettyDate(entry.createdAt)} · ${entry.symptoms?.length || 0} body clues`; point.append(title); svg.append(point);
+  });
+  host.append(svg);
+  const current = recent.slice(-7), previous = recent.slice(-14, -7);
+  const currentAverage = current.reduce((sum, entry) => sum + (entry.symptoms?.length || 0), 0) / current.length;
+  const priorAverage = previous.length ? previous.reduce((sum, entry) => sum + (entry.symptoms?.length || 0), 0) / previous.length : null;
+  let story;
+  if (priorAverage === null) story = `You logged about ${currentAverage.toFixed(1)} body clues per check-in so far. A few more check-ins will help this picture grow.`;
+  else if (currentAverage > priorAverage + .2) story = "Your recent check-ins include more breathing clues than the earlier ones. You can share what you notice with an adult.";
+  else if (currentAverage < priorAverage - .2) story = "Your recent check-ins include fewer breathing clues than the earlier ones. Keep sharing what you notice with an adult.";
+  else story = "Your check-ins show about the same number of breathing clues lately. Keep tracking so you and an adult can spot patterns together.";
+  $("#patient-breathing-story").textContent = story;
+}
+
+function renderPatientLessons() {
+  const host = $("#patient-lessons"); host.replaceChildren();
+  patientLessons.forEach((lesson) => {
+    const card = document.createElement("details"); card.className = "lesson-card";
+    const summary = document.createElement("summary");
+    const icon = document.createElement("span"); icon.className = "lesson-symbol"; icon.textContent = lesson.icon;
+    const heading = document.createElement("span"); heading.className = "lesson-heading";
+    const title = document.createElement("strong"); title.textContent = lesson.title;
+    const subtitle = document.createElement("small"); subtitle.textContent = lesson.subtitle;
+    heading.append(title, subtitle); summary.append(icon, heading);
+    const detail = document.createElement("p"); detail.textContent = lesson.detail;
+    const source = document.createElement("a"); source.href = lesson.source; source.target = "_blank"; source.rel = "noreferrer"; source.textContent = "Learn more with an adult ↗";
+    const complete = document.createElement("button"); complete.type = "button"; complete.className = "lesson-complete"; complete.textContent = completedPatientLessons.has(lesson.id) ? "✓ Lesson badge earned" : "☆ I learned this!";
+    complete.addEventListener("click", () => {
+      completedPatientLessons.add(lesson.id); localStorage.setItem("airwise-kids-lessons", JSON.stringify([...completedPatientLessons]));
+      renderPatientLessons(); renderPatientWeek();
+    });
+    card.append(summary, detail, source, complete); host.append(card);
+  });
+  const count = completedPatientLessons.size;
+  $("#patient-lesson-progress").textContent = `${count} of 4 lessons explored`;
+  $("#lesson-progress-track i").style.width = `${Math.min(100, count / 4 * 100)}%`;
+}
+
+function renderPatientApp() {
+  renderPatientWeek(); renderPatientBreathing(); renderPatientLessons();
+  $("#controller-check").checked = localStorage.getItem("airwise-controller-taken") !== "false";
+  $("#rescue-check").checked = localStorage.getItem("airwise-rescue-available") !== "false";
+  $("#device-check").checked = localStorage.getItem("airwise-nebulizer-ready") !== "false";
+}
+
+function renderPatientHome() {
+  const patient = patients.find((item) => item.id === "PT-2048");
+  if (!patient) return;
+  const history = patientEntries().slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const latest = history[0];
+  $("#patient-home-name").textContent = patient.name;
+  $("#patient-home-id").textContent = patient.id;
+  $("#patient-home-age").textContent = `${syntheticAges[patient.id] ?? "—"} · demo`;
+  const summary = $("#patient-home-update-summary"), meta = $("#patient-home-update-meta"), date = $("#patient-home-update-date");
+  if (latest) {
+    const feeling = feelingInfo[latest.feeling].label.toLowerCase();
+    const bodyClues = latest.symptoms?.length ? `${latest.symptoms.length} body clue${latest.symptoms.length === 1 ? "" : "s"}` : "no body clues";
+    const inhaler = latest.inhalerNeeded ? "marked rescue inhaler needed" : "did not mark rescue inhaler needed";
+    summary.textContent = `Latest check-in: you felt ${feeling} (${latest.feeling}/5), reported ${bodyClues}, and ${inhaler}.`;
+    meta.textContent = `Your check-in · ${prettyTime(latest.createdAt)} · sample information`;
+    date.textContent = prettyDate(latest.createdAt);
+  } else {
+    summary.textContent = "No check-in has been saved yet. When you’re ready, you can share how you feel.";
+    meta.textContent = "Only use this sample profile.";
+    date.textContent = "";
+  }
+  const chronological = history.slice(0, 14).reverse();
+  drawHomeTrend("#patient-home-symptoms-chart", chronological, (entry) => entry.symptoms?.length || 0, "#319bc7", 0, 3);
+  drawHomeTrend("#patient-home-feeling-chart", chronological, (entry) => entry.feeling, "#37ad67", 1, 5);
+}
+
+function setPatientView(view) {
+  patientView = view;
+  const isPatient = $("#app-shell").classList.contains("patient-mode");
+  $("#patient-home").hidden = !isPatient || view !== "home";
+  $("#patient-app").hidden = !isPatient || view !== "daily-checkin";
+  document.querySelectorAll("[data-patient-view]").forEach((button) => {
+    const active = button.dataset.patientView === view;
+    button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function setAppMode(mode) {
+  const isPatient = mode === "patient";
+  const wasPatientMode = $("#app-shell").classList.contains("patient-mode");
+  $("#app-shell").classList.toggle("patient-mode", isPatient);
+  setPatientView(isPatient ? (wasPatientMode ? patientView : "home") : "home");
+  setProviderView(isPatient ? providerView : "home");
+  document.querySelectorAll("[data-app-mode]").forEach((button) => {
+    const active = button.dataset.appMode === mode;
+    button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active));
+  });
+  if (isPatient) {
+    selectedPatientId = "PT-2048"; selectedDate = localStartOfDay(new Date()); visibleMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+    if (!patientModeInitialized) {
+      $("input[name=inhaler][value=no]").checked = true;
+      $("input[name=medication][value=yes]").checked = $("#controller-check").checked;
+      $("input[name=medication][value=no]").checked = !$("#controller-check").checked;
+      $("#reason-field").hidden = true;
+      patientModeInitialized = true;
+    }
+    renderPatientList(); render(); loadInsights();
+  } else {
+    render();
+  }
 }
 
 async function loadEntries() {
@@ -510,15 +767,29 @@ async function submitCheckIn(event) {
     entries = [saved, ...entries];
     render();
     loadInsights();
-    closePatientPreview();
-    toast("Check-in saved to the provider dashboard.");
-    $("#latest-card").scrollIntoView({ behavior: "smooth", block: "center" });
+    if (!$("#patient-modal").hidden) closePatientPreview();
+    const isPatient = $("#app-shell").classList.contains("patient-mode");
+    if (isPatient) resetPatientCheckIn();
+    toast(isPatient ? "Check-in complete! It’s saved in the shared demo." : "Check-in saved to the provider dashboard.");
+    if (isPatient) $("#patient-breathing").scrollIntoView({ behavior: "smooth", block: "center" });
+    else if (providerView === "home") $("#home-update-summary").scrollIntoView({ behavior: "smooth", block: "center" });
+    else $("#latest-card").scrollIntoView({ behavior: "smooth", block: "center" });
   } catch (error) {
     console.error(error);
     toast("Could not save this check-in. Please try again.");
   } finally {
     setLoading(false);
   }
+}
+
+function resetPatientCheckIn() {
+  $("#checkin-form").reset();
+  $("#feeling-options .feeling-option").forEach((button) => button.classList.toggle("selected", button.dataset.score === "4"));
+  document.querySelectorAll("#reason-options .choice-chip, #timing-options .choice-chip, #symptom-options .choice-chip").forEach((button) => button.classList.remove("selected"));
+  $("input[name=inhaler][value=no]").checked = true;
+  $("input[name=medication][value=yes]").checked = $("#controller-check").checked;
+  $("input[name=medication][value=no]").checked = !$("#controller-check").checked;
+  $("#reason-field").hidden = true;
 }
 
 function exportSummary() {
@@ -540,6 +811,54 @@ renderFeelingOptions();
 renderChoices("#reason-options", reasonChoices, "reason");
 renderChoices("#timing-options", timingChoices, "timing", "radio");
 renderChoices("#symptom-options", symptomChoices, "symptom");
+$("#patient-checkin-host").append($("#checkin-form"));
+document.querySelectorAll("[data-app-mode]").forEach((button) => button.addEventListener("click", () => setAppMode(button.dataset.appMode)));
+document.querySelectorAll("[data-provider-view]").forEach((button) => button.addEventListener("click", () => setProviderView(button.dataset.providerView)));
+document.querySelectorAll("[data-patient-view]").forEach((button) => button.addEventListener("click", () => setPatientView(button.dataset.patientView)));
+document.querySelectorAll("[data-patient-target]").forEach((button) => button.addEventListener("click", () => {
+  if (!$("#app-shell").classList.contains("patient-mode")) setAppMode("patient");
+  setPatientView("daily-checkin");
+  const target = $(`#${button.dataset.patientTarget}`);
+  if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "start" }));
+}));
+document.querySelectorAll("[data-open-provider-dashboard]").forEach((button) => button.addEventListener("click", () => {
+  if ($("#app-shell").classList.contains("patient-mode")) setAppMode("provider");
+  setProviderView("dashboard");
+  const target = button.dataset.scrollTarget ? $(`#${button.dataset.scrollTarget}`) : null;
+  if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "start" }));
+}));
+$("#provider-home").querySelectorAll('[data-module-action="trends"]').forEach((button) => button.addEventListener("click", () => {
+  setProviderView("dashboard"); requestAnimationFrame(() => $("#symptom-trend-chart").scrollIntoView({ behavior: "smooth", block: "center" }));
+}));
+$("#provider-home").querySelectorAll('[data-module-action="medication"]').forEach((button) => button.addEventListener("click", () => {
+  setProviderView("dashboard"); requestAnimationFrame(() => $(".patterns-card").scrollIntoView({ behavior: "smooth", block: "center" }));
+}));
+$("#provider-home").querySelectorAll('[data-module-action="notes"]').forEach((button) => button.addEventListener("click", () => toast("Patient notes are a placeholder module in this demo.")));
+$("#provider-home").querySelectorAll("[data-open-questionnaire]").forEach((button) => button.addEventListener("click", openPatientPreview));
+$("#dashboard-settings-button").addEventListener("click", () => $("#dashboard-settings-dialog").showModal());
+$("#close-dashboard-settings").addEventListener("click", () => $("#dashboard-settings-dialog").close());
+$("#settings-done").addEventListener("click", () => $("#dashboard-settings-dialog").close());
+$("#dashboard-settings-dialog").addEventListener("click", (event) => {
+  if (event.target === $("#dashboard-settings-dialog")) $("#dashboard-settings-dialog").close();
+});
+document.querySelectorAll(".sidebar nav a").forEach((link) => link.addEventListener("click", (event) => {
+  event.preventDefault();
+  const target = link.getAttribute("href");
+  if (target === "#dashboard") { setProviderView("home"); return; }
+  setProviderView("dashboard");
+  const anchor = $(target);
+  if (anchor) requestAnimationFrame(() => anchor.scrollIntoView({ behavior: "smooth", block: "start" }));
+}));
+$("#patient-week-previous").addEventListener("click", () => { patientWeekOffset -= 1; renderPatientWeek(); });
+$("#patient-week-next").addEventListener("click", () => { if (patientWeekOffset < 0) patientWeekOffset += 1; renderPatientWeek(); });
+$("#patient-provider-link").addEventListener("click", () => setAppMode("provider"));
+$("#controller-check").addEventListener("change", (event) => {
+  localStorage.setItem("airwise-controller-taken", String(event.target.checked));
+  $("input[name=medication][value=yes]").checked = event.target.checked;
+  $("input[name=medication][value=no]").checked = !event.target.checked;
+});
+$("#rescue-check").addEventListener("change", (event) => localStorage.setItem("airwise-rescue-available", String(event.target.checked)));
+$("#device-check").addEventListener("change", (event) => localStorage.setItem("airwise-nebulizer-ready", String(event.target.checked)));
 $("#patient-preview-button").addEventListener("click", openPatientPreview);
 $("#close-modal").addEventListener("click", closePatientPreview);
 $("#patient-modal").addEventListener("click", (event) => { if (event.target.id === "patient-modal") closePatientPreview(); });
@@ -557,6 +876,11 @@ $("#previous-month").addEventListener("click", () => { visibleMonth.setMonth(vis
 $("#next-month").addEventListener("click", () => { visibleMonth.setMonth(visibleMonth.getMonth() + 1); renderCalendar(); });
 document.querySelectorAll("input[name=inhaler]").forEach((input) => input.addEventListener("change", () => {
   $("#reason-field").hidden = $("input[name=inhaler]:checked").value !== "yes";
+}));
+document.querySelectorAll("input[name=medication]").forEach((input) => input.addEventListener("change", () => {
+  const taken = $("input[name=medication]:checked").value === "yes";
+  localStorage.setItem("airwise-controller-taken", String(taken));
+  $("#controller-check").checked = taken;
 }));
 document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !$("#patient-modal").hidden) closePatientPreview(); });
 loadEntries();
