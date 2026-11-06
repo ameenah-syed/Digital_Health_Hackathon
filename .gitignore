@@ -7,3 +7,7 @@ data/
 
 **/xcuserdata/
 **/DerivedData/
+
+.node-runtime/
+
+.node-runtime/

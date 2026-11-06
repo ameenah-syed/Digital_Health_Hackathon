@@ -1,0 +1,505 @@
+.provider-home-heading {
+  align-items: center;
+}
+
+.provider-home-heading h1 {
+  font-size: clamp(28px, 3vw, 37px);
+  letter-spacing: -1.25px;
+}
+
+.home-patient-subheadings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+  color: #7e9095;
+  font-size: 11px;
+}
+
+.home-patient-subheadings span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.home-patient-subheadings strong {
+  color: #425c61;
+  font-weight: 700;
+}
+
+.home-update-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 19px;
+  margin: 2px 0 16px;
+  border-color: #dcece7;
+  background: linear-gradient(100deg, #fff 0%, #f4fbf8 100%);
+}
+
+.update-banner-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 12px;
+  background: #e4f5ee;
+  color: #35956a;
+  font-size: 20px;
+}
+
+.update-banner-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.update-banner-copy .eyebrow {
+  margin: 0 0 4px;
+  color: #5f9c7b;
+  font-size: 8px;
+}
+
+.update-banner-copy strong {
+  display: block;
+  color: #3e565b;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.update-banner-copy small {
+  display: block;
+  margin-top: 4px;
+  color: #8c9b9d;
+  font-size: 8px;
+}
+
+.home-update-banner > time {
+  color: #819395;
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.home-module-grid {
+  max-width: 1220px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.home-module-card {
+  min-height: 220px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 26px;
+  border-top: 4px solid #36a9db;
+  border-radius: 17px;
+  text-align: center;
+}
+
+.home-module-card.module-violet {
+  border-top-color: #a64a9c;
+}
+
+.home-module-card.module-green {
+  border-top-color: #37ad67;
+}
+
+.home-module-card.module-teal {
+  border-top-color: #078b8c;
+}
+
+.home-module-card.module-pink {
+  border-top-color: #e56c9a;
+}
+
+.home-module-card.module-amber {
+  border-top-color: #d89b38;
+}
+
+.home-module-copy {
+  flex: 0 1 auto;
+  width: 100%;
+  max-width: 290px;
+  padding: 0;
+}
+
+.home-module-copy strong {
+  display: block;
+  font: 700 clamp(16px, 1.45vw, 20px) Manrope, sans-serif;
+  line-height: 1.28;
+  color: #30494f;
+}
+
+.home-module-copy small {
+  display: block;
+  margin: 10px auto 0;
+  color: #829397;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.dashboard-settings-button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid #e3ecea;
+  border-radius: 10px;
+  background: #fff;
+  color: #4d7470;
+  box-shadow: 0 1px 4px #173c3b0b;
+}
+
+.dashboard-settings-button:hover {
+  border-color: #cce3dc;
+  background: #eef8f5;
+}
+
+.dashboard-settings-button span {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.shell.patient-mode .dashboard-settings-button {
+  display: none;
+}
+
+.dashboard-settings-dialog {
+  width: min(480px, calc(100% - 32px));
+  padding: 22px;
+  border: 1px solid #e4ecea;
+  border-radius: 18px;
+  background: #fff;
+  color: #263d43;
+  box-shadow: 0 24px 80px #132e3038;
+}
+
+.dashboard-settings-dialog::backdrop {
+  background: #18333766;
+  backdrop-filter: blur(3px);
+}
+
+.settings-dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.settings-dialog-heading .eyebrow {
+  margin: 0 0 5px;
+}
+
+.settings-dialog-heading h2 {
+  margin: 0;
+  font: 700 19px Manrope, sans-serif;
+  letter-spacing: -.4px;
+}
+
+.settings-dialog-intro {
+  margin: 10px 0 15px;
+  color: #839397;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.settings-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid #eff3f2;
+}
+
+.settings-preview-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 10px;
+  background: #f1f7f5;
+  color: #468a7e;
+  font-size: 16px;
+}
+
+.settings-preview-icon.blue {
+  background: #eaf5fc;
+  color: #319bc7;
+}
+
+.settings-preview-icon.green {
+  background: #eaf7ed;
+  color: #37ad67;
+}
+
+.settings-preview-row > span:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.settings-preview-row strong,
+.settings-preview-row small {
+  display: block;
+}
+
+.settings-preview-row strong {
+  font-size: 10px;
+}
+
+.settings-preview-row small {
+  margin-top: 3px;
+  color: #8b9a9d;
+  font-size: 8px;
+}
+
+.settings-preview-row > b {
+  color: #9aa7a9;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.settings-done-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  border: 0;
+  border-radius: 9px;
+  background: #087779;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.patient-view-switch {
+  display: none;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #e6efed;
+  border-radius: 10px;
+  background: #f5f9f8;
+}
+
+.shell.patient-mode .patient-view-switch {
+  display: flex;
+}
+
+.shell.patient-mode .provider-view-switch {
+  display: none;
+}
+
+.patient-view-button {
+  border: 0;
+  border-radius: 7px;
+  padding: 7px 9px;
+  background: transparent;
+  color: #7a8d90;
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.patient-view-button.active {
+  background: #fff;
+  color: #087779;
+  box-shadow: 0 1px 4px #173c3b12;
+}
+
+.patient-home {
+  max-width: 1160px;
+  padding-top: 23px;
+}
+
+.patient-home-heading {
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.patient-home-heading h1 {
+  font-size: clamp(27px, 3vw, 36px);
+}
+
+.patient-home-update .update-banner-copy strong {
+  color: #345a50;
+}
+
+.patient-home-modules {
+  max-width: 950px;
+  margin: 23px auto 0;
+}
+
+.patient-home-modules .home-modules-heading {
+  justify-content: center;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.patient-home-modules .home-modules-heading h2 {
+  font-size: 19px;
+}
+
+.patient-home .home-module-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.patient-home .home-module-card {
+  aspect-ratio: 1;
+  min-height: 220px;
+  justify-content: center;
+  padding: 22px;
+  border-top-width: 5px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.patient-home .home-module-copy {
+  max-width: 100%;
+}
+
+.patient-home .home-module-copy strong {
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.25;
+}
+
+.patient-home .home-module-copy small {
+  display: none;
+}
+
+.patient-home[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 1050px) {
+  .home-module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .patient-home {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .patient-home .home-module-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (max-width: 760px) {
+  .patient-home .home-module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .topbar {
+    padding: 0 9px;
+  }
+
+  .topbar .breadcrumbs {
+    display: none;
+  }
+
+  .top-actions {
+    margin-left: auto;
+  }
+
+  .patient-view-switch {
+    gap: 1px;
+    padding: 2px;
+  }
+
+  .patient-view-switch .provider-view-button {
+    padding: 6px 5px;
+    font-size: 7px;
+  }
+
+  .provider-home-heading {
+    align-items: flex-start;
+  }
+
+  .provider-home-heading h1 {
+    font-size: 27px;
+  }
+
+  .patient-home {
+    padding: 19px 13px;
+  }
+
+  .patient-home-heading h1 {
+    font-size: 26px;
+  }
+
+  .home-patient-subheadings {
+    gap: 10px;
+    font-size: 10px;
+  }
+
+  .home-update-banner {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px;
+  }
+
+  .update-banner-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .update-banner-copy strong {
+    font-size: 10px;
+  }
+
+  .home-update-banner > time {
+    font-size: 8px;
+  }
+
+  .home-module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+  }
+
+  .home-module-card {
+    min-height: 180px;
+    padding: 15px;
+  }
+
+  .patient-home .home-module-card {
+    min-height: 155px;
+    padding: 12px;
+  }
+
+  .home-module-copy {
+    max-width: 100%;
+  }
+
+  .home-module-copy strong {
+    font-size: clamp(14px, 4vw, 18px);
+  }
+
+  .patient-home .home-module-copy strong {
+    font-size: clamp(16px, 4.2vw, 20px);
+  }
+
+  .home-module-copy small {
+    margin-top: 8px;
+    font-size: 9px;
+  }
+
+  .dashboard-settings-dialog {
+    padding: 18px;
+  }
+
+  .settings-preview-row {
+    gap: 8px;
+  }
+
+  .settings-preview-row > b {
+    font-size: 7px;
+  }
+}
