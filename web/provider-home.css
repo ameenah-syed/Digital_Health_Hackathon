@@ -322,9 +322,133 @@
   font-size: clamp(27px, 3vw, 36px);
 }
 
-.patient-home-update .update-banner-copy strong {
-  color: #345a50;
+.patient-home-calendar {
+  margin: 5px 0 14px;
+  padding: 20px 22px 16px;
+  border-color: #dcece7;
+  background: linear-gradient(110deg, #fff 0%, #f4fbf8 100%);
 }
+
+.patient-home-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.patient-home-calendar-heading .eyebrow,
+.trophy-shelf-heading .eyebrow,
+.patient-module-heading .eyebrow { margin: 0 0 5px; }
+
+.patient-home-calendar-heading h2 {
+  margin: 0;
+  color: #31545a;
+  font: 700 23px Manrope, sans-serif;
+}
+
+.patient-home-calendar-heading h2 strong { color: #16847d; }
+.patient-home-calendar-heading h2 span { font-size: 13px; font-weight: 600; }
+
+.patient-home-calendar-heading p:last-child {
+  margin: 5px 0 0;
+  color: #85989a;
+  font-size: 9px;
+}
+
+.patient-home-week-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #526d70;
+  font-size: 10px;
+}
+
+.patient-home-week-nav button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e0ece8;
+  border-radius: 9px;
+  background: #fff;
+  color: #16847d;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.patient-home-week-nav button:disabled { color: #bbc8c6; }
+
+.patient-home-week-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.patient-home-day {
+  min-height: 81px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #e8efed;
+  border-radius: 12px;
+  background: #fff;
+  color: #829396;
+}
+
+.patient-home-day small { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.patient-home-day strong { color: #405b60; font: 700 17px Manrope, sans-serif; }
+
+.patient-home-day span {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f1f5f4;
+  color: #a0afad;
+  font-size: 10px;
+}
+
+.patient-home-day.is-complete { border-color: #cfead9; background: #f0faf3; }
+.patient-home-day.is-complete span { background: #37ad67; color: #fff; }
+.patient-home-day.is-today { outline: 2px solid #54b6a1; outline-offset: 1px; }
+
+.patient-home-latest { margin: 12px 0 0; color: #789091; font-size: 9px; }
+
+.patient-trophy-shelf { margin: 0 0 18px; padding: 15px 19px; }
+
+.trophy-shelf-heading { display: flex; align-items: center; justify-content: space-between; }
+
+.trophy-shelf-heading h2,
+.patient-module-heading h2 {
+  margin: 0;
+  color: #30494f;
+  font: 700 15px Manrope, sans-serif;
+}
+
+.trophy-shelf-heading > span { font-size: 19px; }
+
+.trophy-shelf-items {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.trophy-item {
+  min-height: 61px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border: 1px solid #f0e8d7;
+  border-radius: 11px;
+  background: #fffcf5;
+}
+
+.trophy-item > span { font-size: 23px; }
+.trophy-item strong { color: #6c6250; font-size: 9px; }
 
 .patient-home-modules {
   max-width: 950px;
@@ -369,6 +493,57 @@
   display: none;
 }
 
+.patient-module-group { max-width: 1050px; margin: 24px auto 0; }
+.patient-module-heading { margin-bottom: 12px; }
+.patient-module-heading .eyebrow { color: #15827b; }
+
+.patient-home-module-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.patient-home-module {
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #e7eeee;
+  border-top: 4px solid #319bc7;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  text-align: center;
+  cursor: default;
+}
+
+.patient-home-module > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #eaf5fc;
+  color: #319bc7;
+  font-size: 23px;
+}
+
+.patient-home-module strong { color: #30494f; font: 700 15px Manrope, sans-serif; }
+.patient-home-module small { color: #8a999b; font-size: 9px; }
+.patient-home-module.module-violet { border-top-color: #a64a9c; }
+.patient-home-module.module-violet > span { background: #f5eff8; color: #99528e; }
+.patient-home-module.module-green { border-top-color: #37ad67; }
+.patient-home-module.module-green > span { background: #eaf7ed; color: #37ad67; }
+.patient-home-module.module-teal { border-top-color: #078b8c; }
+.patient-home-module.module-teal > span { background: #e8f7f5; color: #078b8c; }
+.patient-home-module.module-pink { border-top-color: #e56c9a; }
+.patient-home-module.module-pink > span { background: #fbeef2; color: #d96d91; }
+.patient-home-module.module-amber { border-top-color: #d89b38; }
+.patient-home-module.module-amber > span { background: #fbf4e9; color: #c78d3e; }
+
 .patient-home[hidden] {
   display: none !important;
 }
@@ -391,9 +566,11 @@
 }
 
 @media (max-width: 760px) {
-  .patient-home .home-module-grid {
+  .patient-home-module-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .trophy-shelf-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 560px) {
@@ -430,6 +607,36 @@
   .patient-home {
     padding: 19px 13px;
   }
+
+  .patient-home-calendar { padding: 15px 12px; }
+
+  .patient-home-calendar-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+
+  .patient-home-week-nav { align-self: flex-end; margin-top: -33px; }
+
+  .patient-home-week-days { gap: 4px; margin-top: 12px; }
+
+  .patient-home-day { min-height: 69px; gap: 4px; border-radius: 9px; }
+
+  .patient-home-day small { font-size: 8px; }
+
+  .patient-home-day strong { font-size: 14px; }
+
+  .patient-trophy-shelf { padding: 13px; }
+
+  .trophy-item { min-height: 52px; gap: 7px; padding: 7px; }
+
+  .trophy-item > span { font-size: 19px; }
+
+  .trophy-item strong { font-size: 8px; }
+
+  .patient-home-module-grid { gap: 10px; }
+
+  .patient-home-module { min-height: 145px; padding: 12px; }
+
+  .patient-home-module strong { font-size: 13px; }
+
+  .patient-home-module small { font-size: 8px; }
 
   .patient-home-heading h1 {
     font-size: 26px;

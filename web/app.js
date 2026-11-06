@@ -23,6 +23,7 @@ let selectedDate = localStartOfDay(new Date());
 let visibleMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 let selectedRing = "mood";
 let patientWeekOffset = 0;
+let patientHomeWeekOffset = 0;
 let completedPatientLessons = new Set(JSON.parse(localStorage.getItem("airwise-kids-lessons") || "[]"));
 let patientModeInitialized = false;
 let providerView = "home";
@@ -628,22 +629,39 @@ function renderPatientHome() {
   $("#patient-home-name").textContent = patient.name;
   $("#patient-home-id").textContent = patient.id;
   $("#patient-home-age").textContent = `${syntheticAges[patient.id] ?? "—"} · demo`;
-  const summary = $("#patient-home-update-summary"), meta = $("#patient-home-update-meta"), date = $("#patient-home-update-date");
-  if (latest) {
-    const feeling = feelingInfo[latest.feeling].label.toLowerCase();
-    const bodyClues = latest.symptoms?.length ? `${latest.symptoms.length} body clue${latest.symptoms.length === 1 ? "" : "s"}` : "no body clues";
-    const inhaler = latest.inhalerNeeded ? "marked rescue inhaler needed" : "did not mark rescue inhaler needed";
-    summary.textContent = `Latest check-in: you felt ${feeling} (${latest.feeling}/5), reported ${bodyClues}, and ${inhaler}.`;
-    meta.textContent = `Your check-in · ${prettyTime(latest.createdAt)} · sample information`;
-    date.textContent = prettyDate(latest.createdAt);
-  } else {
-    summary.textContent = "No check-in has been saved yet. When you’re ready, you can share how you feel.";
-    meta.textContent = "Only use this sample profile.";
-    date.textContent = "";
-  }
+  renderPatientHomeWeek(history);
   const chronological = history.slice(0, 14).reverse();
   drawHomeTrend("#patient-home-symptoms-chart", chronological, (entry) => entry.symptoms?.length || 0, "#319bc7", 0, 3);
   drawHomeTrend("#patient-home-feeling-chart", chronological, (entry) => entry.feeling, "#37ad67", 1, 5);
+}
+
+function renderPatientHomeWeek(history = patientEntries()) {
+  const today = localStartOfDay(new Date());
+  const start = new Date(today);
+  start.setDate(start.getDate() - start.getDay() + patientHomeWeekOffset * 7);
+  const daysHost = $("#patient-home-week-days");
+  daysHost.replaceChildren();
+  let completedDays = 0;
+  for (let index = 0; index < 7; index += 1) {
+    const date = new Date(start); date.setDate(start.getDate() + index);
+    const tracked = history.some((entry) => localDateKey(new Date(entry.createdAt)) === localDateKey(date));
+    if (tracked) completedDays += 1;
+    const day = document.createElement("div");
+    day.className = `patient-home-day${tracked ? " is-complete" : ""}${localDateKey(date) === localDateKey(today) ? " is-today" : ""}`;
+    const label = document.createElement("small"); label.textContent = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date);
+    const number = document.createElement("strong"); number.textContent = String(date.getDate());
+    const mark = document.createElement("span"); mark.textContent = tracked ? "✓" : "·";
+    day.append(label, number, mark); daysHost.append(day);
+  }
+  const end = new Date(start); end.setDate(start.getDate() + 6);
+  $("#patient-home-week-label").textContent = patientHomeWeekOffset === 0 ? "This week" : `${prettyDate(start)} – ${prettyDate(end)}`;
+  $("#patient-home-week-next").disabled = patientHomeWeekOffset >= 0;
+  $("#patient-home-streak").textContent = String(patientStreak());
+  $("#patient-home-week-summary").textContent = `${completedDays} of 7 days checked in this week`;
+  const latest = history.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+  $("#patient-home-latest").textContent = latest
+    ? `Latest check-in · ${prettyDate(latest.createdAt)} at ${prettyTime(latest.createdAt)} · Feeling ${feelingInfo[latest.feeling].label.toLowerCase()}`
+    : "No check-ins yet this week. Pick a day to start your streak!";
 }
 
 function setPatientView(view) {
@@ -851,6 +869,8 @@ document.querySelectorAll(".sidebar nav a").forEach((link) => link.addEventListe
 }));
 $("#patient-week-previous").addEventListener("click", () => { patientWeekOffset -= 1; renderPatientWeek(); });
 $("#patient-week-next").addEventListener("click", () => { if (patientWeekOffset < 0) patientWeekOffset += 1; renderPatientWeek(); });
+$("#patient-home-week-previous").addEventListener("click", () => { patientHomeWeekOffset -= 1; renderPatientHomeWeek(); });
+$("#patient-home-week-next").addEventListener("click", () => { if (patientHomeWeekOffset < 0) patientHomeWeekOffset += 1; renderPatientHomeWeek(); });
 $("#patient-provider-link").addEventListener("click", () => setAppMode("provider"));
 $("#controller-check").addEventListener("change", (event) => {
   localStorage.setItem("airwise-controller-taken", String(event.target.checked));
