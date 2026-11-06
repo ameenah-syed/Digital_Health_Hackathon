@@ -503,3 +503,47 @@
     font-size: 7px;
   }
 }
+
+/* SMART@Home palette: purple is primary. Mood tracker colors remain in app.js. */
+:root {
+  --brand-purple: #9D2D73;
+  --brand-purple-dark: #702052;
+  --brand-blue: #80CBD8;
+  --brand-teal: #00738C;
+  --brand-lime: #A1CC3A;
+  --brand-ink: #24313A;
+  --brand-wash: #FBF7FA;
+}
+.sidebar { border-right-color: #ead7e3; background: linear-gradient(180deg, #fff 0%, var(--brand-wash) 100%); }
+.brand-mark { background: linear-gradient(135deg, var(--brand-purple) 0 48%, var(--brand-teal) 48% 73%, var(--brand-lime) 73%); }
+.brand, .page-heading h1, .provider-home-heading h1, .home-card-heading h2, .home-modules-heading h2 { color: var(--brand-ink); }
+.topbar { border-bottom-color: #ead7e3; background: #fff; box-shadow: 0 2px 0 rgba(157,45,115,.04); }
+.nav-item.active { background: var(--brand-purple); color: #fff; box-shadow: 0 5px 14px rgba(157,45,115,.2); }
+.nav-item.active .nav-count { color: var(--brand-purple-dark); }
+.nav-count { color: var(--brand-purple); }
+.secondary-button, .period-button, .provider-view-switch { border-color: #e4cddd; }
+.secondary-button span, .text-button, .link-button, .view-all-button, .home-chart-foot > button, .patient-info-tile summary, .lesson-card > a { color: var(--brand-purple); }
+.secondary-button:hover, .period-button:hover, .home-module-card:hover { border-color: var(--brand-purple); }
+.provider-view-button.active, .app-switch-button.active { background: var(--brand-purple); color: #fff; box-shadow: 0 2px 8px rgba(157,45,115,.2); }
+.home-open-button, .patient-provider-tab { background: #f8edf5; color: var(--brand-purple-dark); }
+.home-status { color: var(--brand-teal); background: #e8f6f8; }
+.home-status i, .online-dot, .status-dot { background: var(--brand-lime); }
+.home-card-icon.violet, .home-module-icon.violet, .pink-tile { background: #f8eaf3; color: var(--brand-purple); }
+.home-card-icon.blue, .home-module-icon.blue, .blue-tile { background: #e7f7fa; color: var(--brand-teal); }
+.home-card-icon.green, .home-module-icon.green, .green-tile { background: #f0f8df; color: #557c08; }
+.home-module-icon.teal, .teal-tile { background: #e5f5f7; color: var(--brand-teal); }
+.home-module-icon.pink { background: #f8eaf3; color: var(--brand-purple); }
+.home-module-icon.amber { background: #f0f8df; color: #557c08; }
+.chart-bar { background: linear-gradient(180deg, var(--brand-teal), var(--brand-blue)); }
+.chart-col.latest .chart-bar { background: linear-gradient(180deg, var(--brand-purple), var(--brand-teal)); }
+.legend-dot, .chart-legend-blue { background: var(--brand-teal); }
+.chart-legend-green { background: var(--brand-lime); }
+.legend-scale i { background: linear-gradient(90deg, var(--brand-purple), var(--brand-blue), var(--brand-teal), var(--brand-lime)); }
+.home-chart-foot > button b, .home-module-arrow { color: var(--brand-purple); }
+.patient-welcome, .patient-story { border-color: #e4cddd; }
+.patient-checkin-panel .feeling-option.selected { border-color: var(--brand-purple); }
+.patient-checkin-panel .submit-button { background: var(--brand-purple); }
+.patient-checkin-panel .submit-button:hover { background: var(--brand-purple-dark); }
+.lesson-symbol { background: #e7f7fa; color: var(--brand-teal); }
+.lesson-complete { background: #f0f8df; color: #557c08; }
+.lesson-progress i { background: var(--brand-lime); }
