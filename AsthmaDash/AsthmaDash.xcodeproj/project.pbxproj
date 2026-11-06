@@ -18,7 +18,7 @@
 			containerPortal = 86CE0143309E298E0076F68E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 86CE0177309E48E80076F68E;
-			remoteInfo = AirwisePatientWidgetExtension;
+			remoteInfo = SmartHomePatientWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -78,7 +78,7 @@
 			exceptions = (
 				86CE0186309E48E90076F68E /* Exceptions for "AirwisePatientWidget" folder in "AirwisePatientWidgetExtension" target */,
 			);
-			path = AirwisePatientWidget;
+			path = SmartHomePatientWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -190,8 +190,8 @@
 			fileSystemSynchronizedGroups = (
 				86CE017E309E48E90076F68E /* AirwisePatientWidget */,
 			);
-			name = AirwisePatientWidgetExtension;
-			productName = AirwisePatientWidgetExtension;
+			name = SmartHomePatientWidgetExtension;
+			productName = SmartHomePatientWidgetExtension;
 			productReference = 86CE0178309E48E80076F68E /* AirwisePatientWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
@@ -407,7 +407,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airwise Provider";
+				INFOPLIST_KEY_CFBundleDisplayName = "SMART@Home Provider";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -450,7 +450,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airwise Provider";
+				INFOPLIST_KEY_CFBundleDisplayName = "SMART@Home Provider";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -492,7 +492,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PatientApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airwise Patient";
+				INFOPLIST_KEY_CFBundleDisplayName = "SMART@Home Patient";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -528,7 +528,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PatientApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airwise Patient";
+				INFOPLIST_KEY_CFBundleDisplayName = "SMART@Home Patient";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -564,8 +564,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AirwisePatientWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AirwisePatientWidget;
+			INFOPLIST_FILE = SmartHomePatientWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SMARTHomePatientWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -580,7 +580,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 27.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.digitalhealth.PatientApp.AirwisePatientWidget;
+			PRODUCT_BUNDLE_IDENTIFIER = org.digitalhealth.PatientApp.SmartHomePatientWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -604,8 +604,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AirwisePatientWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = AirwisePatientWidget;
+			INFOPLIST_FILE = SmartHomePatientWidget/Info.plist;
+			INFOPLIST_KEY_CFBundleDisplayName = SMARTHomePatientWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -620,7 +620,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 27.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = org.digitalhealth.PatientApp.AirwisePatientWidget;
+			PRODUCT_BUNDLE_IDENTIFIER = org.digitalhealth.PatientApp.SmartHomePatientWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
